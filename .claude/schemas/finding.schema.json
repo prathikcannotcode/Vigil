@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Compliance Finding",
+  "type": "object",
+  "required": ["id", "severity", "framework", "clause", "issue", "recommendation"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^F-[0-9]{4}$" },
+    "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+    "framework": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR"] },
+    "clause": { "type": "string", "description": "Regulatory reference, e.g. 'Section 8(1)' or 'Art. 32(1)(a)'" },
+    "issue": { "type": "string" },
+    "recommendation": { "type": "string" },
+    "file": { "type": "string", "description": "Source file path if code-related" },
+    "line": { "type": "integer" },
+    "status": { "type": "string", "enum": ["open", "remediated", "accepted", "disputed"], "default": "open" },
+    "found_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Data Protection Impact Assessment",
+  "type": "object",
+  "required": ["id", "company_id", "processing_description", "status", "created_at"],
+  "properties": {
+    "id": { "type": "string" },
+    "company_id": { "type": "string" },
+    "processing_description": {
+      "type": "object",
+      "required": ["nature", "scope", "purpose"],
+      "properties": {
+        "nature": { "type": "string" },
+        "scope": { "type": "string" },
+        "context": { "type": "string" },
+        "purpose": { "type": "string" },
+        "data_categories": { "type": "array", "items": { "type": "string" } },
+        "data_subjects": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "necessity_assessment": {
+      "type": "object",
+      "properties": {
+        "is_necessary": { "type": "boolean" },
+        "less_intrusive_alternative": { "type": ["string", "null"] },
+        "lawful_basis": { "type": "string" },
+        "proportionate": { "type": "boolean" }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "likelihood", "impact", "risk_level"],
+        "properties": {
+          "description": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["confidentiality", "integrity", "availability", "rights_impact"]
+          },
+          "likelihood": { "type": "string", "enum": ["low", "medium", "high"] },
+          "impact": { "type": "string", "enum": ["low", "medium", "high"] },
+          "risk_level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "mitigation": { "type": "string" },
+          "residual_risk": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "under_review", "approved", "rejected", "needs_update"]
+    },
+    "dpo_sign_off": {
+      "type": ["object", "null"],
+      "properties": {
+        "approved": { "type": "boolean" },
+        "date": { "type": "string", "format": "date" },
+        "conditions": { "type": ["string", "null"] }
+      }
+    },
+    "framework": { "type": "string", "enum": ["DPDP", "GDPR", "both"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

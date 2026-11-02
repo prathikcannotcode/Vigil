@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Compliance Posture",
+  "type": "object",
+  "required": ["company_id", "assessed_at", "dimensions"],
+  "properties": {
+    "company_id": { "type": "string" },
+    "assessed_at": { "type": "string", "format": "date-time" },
+    "overall": {
+      "type": "string",
+      "enum": ["compliant", "partially_compliant", "non_compliant", "not_assessed"]
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "dpdp_status", "gdpr_status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["governance", "lawful_processing", "rights", "security", "third_parties", "retention"]
+          },
+          "dpdp_status": {
+            "type": "string",
+            "enum": ["compliant", "partially_compliant", "non_compliant", "not_assessed", "not_applicable"]
+          },
+          "gdpr_status": {
+            "type": "string",
+            "enum": ["compliant", "partially_compliant", "non_compliant", "not_assessed", "not_applicable"]
+          },
+          "notes": { "type": "string" },
+          "findings_count": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "finding_summary": {
+      "type": "object",
+      "properties": {
+        "critical": { "type": "integer", "minimum": 0 },
+        "high": { "type": "integer", "minimum": 0 },
+        "medium": { "type": "integer", "minimum": 0 },
+        "low": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "penalty_exposure": {
+      "type": "object",
+      "properties": {
+        "dpdp_inr": { "type": "number" },
+        "gdpr_eur": { "type": "number" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

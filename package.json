@@ -1,0 +1,17 @@
+{
+  "name": "vigil",
+  "version": "0.1.0",
+  "description": "Open-source DPDP and GDPR compliance workspace agent — skills, workflows and schemas for Claude Code",
+  "license": "Apache-2.0",
+  "scripts": {
+    "validate": "node .claude/scripts/validate.mjs",
+    "audit": "node .claude/scripts/validate.mjs --strict",
+    "kpis": "node .claude/scripts/kpis.mjs",
+    "export:sarif": "node .claude/scripts/export-sarif.mjs",
+    "export:oscal": "node .claude/scripts/export-oscal.mjs",
+    "headless": "node .claude/scripts/run-headless.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

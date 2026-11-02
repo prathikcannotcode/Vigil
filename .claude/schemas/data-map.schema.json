@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Personal Data Map",
+  "type": "object",
+  "required": ["company_id", "data_flows", "mapped_at"],
+  "properties": {
+    "company_id": { "type": "string" },
+    "data_flows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "data_type", "purpose", "lawful_basis", "source", "destination"],
+        "properties": {
+          "id": { "type": "string" },
+          "data_type": { "type": "string", "description": "Type of personal data (e.g., email, name, health_record)" },
+          "classification": {
+            "type": "string",
+            "enum": ["direct_identifier", "special_category", "indirect_identifier", "ordinary"]
+          },
+          "purpose": { "type": "string" },
+          "lawful_basis": {
+            "type": "string",
+            "enum": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests", "dpdp_section_7"]
+          },
+          "source": { "type": "string", "description": "Where data is collected from" },
+          "destination": { "type": "string", "description": "Where data flows to" },
+          "processors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Third-party processors involved"
+          },
+          "cross_border": { "type": "boolean", "default": false },
+          "transfer_mechanism": {
+            "type": ["string", "null"],
+            "enum": ["adequacy", "scc", "bcr", "dpf", "derogation", null]
+          },
+          "retention_period": { "type": "string" },
+          "encryption": { "type": "boolean" },
+          "dpa_in_place": { "type": "boolean", "description": "Data Processing Agreement with processors" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "mapped_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

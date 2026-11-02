@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Company Details",
+  "type": "object",
+  "required": ["id", "legal_name", "jurisdiction", "sector", "frameworks", "created_at"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "legal_name": { "type": "string" },
+    "jurisdiction": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["IN", "EU", "UK", "US", "SG", "other"] }
+    },
+    "sector": {
+      "type": "string",
+      "enum": ["fintech", "banking", "insurance", "healthtech", "edtech", "saas", "ecommerce", "government", "other"]
+    },
+    "frameworks": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR", "PCI-DSS", "RBI", "SEBI", "IRDAI"] }
+    },
+    "sdf_status": {
+      "type": "string",
+      "enum": ["not_designated", "designated", "likely", "unknown"],
+      "default": "unknown"
+    },
+    "processes_children_data": { "type": "boolean", "default": false },
+    "processes_sensitive_data": { "type": "boolean", "default": false },
+    "dpo": {
+      "type": ["object", "null"],
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "appointed_at": { "type": "string", "format": "date" }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

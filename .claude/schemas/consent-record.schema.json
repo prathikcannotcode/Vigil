@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Consent Record",
+  "type": "object",
+  "required": ["id", "data_principal", "purpose", "lawful_basis", "collected_at", "status"],
+  "properties": {
+    "id": { "type": "string" },
+    "data_principal": { "type": "string", "description": "Anonymised or pseudonymised identifier" },
+    "purpose": { "type": "string" },
+    "lawful_basis": {
+      "type": "string",
+      "enum": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests"],
+      "description": "GDPR Art. 6(1) basis; DPDP uses consent or certain legitimate uses"
+    },
+    "collected_at": { "type": "string", "format": "date-time" },
+    "withdrawn_at": { "type": ["string", "null"], "format": "date-time" },
+    "status": { "type": "string", "enum": ["active", "withdrawn", "expired"] },
+    "notice_version": { "type": "string", "description": "Version of the privacy notice shown at collection" },
+    "framework": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR", "both"] }
+  },
+  "additionalProperties": false
+}

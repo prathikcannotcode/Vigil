@@ -1,0 +1,11 @@
+node_modules/
+.env
+*.local
+company-profile/*/credentials.json
+assessments/**/raw/
+kpis/metrics.json
+kpis/data/raw/sessions/**/*.json
+*.sarif
+*.oscal.json
+.DS_Store
+Thumbs.db

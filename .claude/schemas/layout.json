@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vigil workspace layout",
+  "description": "Allowed paths and their schemas. Agents may only write files matching these patterns.",
+  "paths": {
+    ".claude/": "Harness assets — skills, schemas, workflows, scripts, settings",
+    "company-profile/{company_id}/details.json": "Organisation details and registrations",
+    "company-profile/{company_id}/data-map.json": "Personal data inventory and data flow map",
+    "company-profile/{company_id}/consent-records/": "Consent collection and withdrawal records",
+    "company-profile/{company_id}/dpias/": "Data Protection Impact Assessments",
+    "company-profile/{company_id}/breach-log.jsonl": "Append-only breach and incident log",
+    "company-profile/{company_id}/rights-log.jsonl": "Append-only data subject rights request log",
+    "company-profile/{company_id}/posture.json": "Current compliance posture snapshot",
+    "assessments/{assessment_id}/": "Point-in-time audit reports",
+    "assessments/templates/": "Reusable assessment templates",
+    "examples/consent-notices/": "Ready-to-use consent notice templates",
+    "examples/sector-guides/": "Sector-specific compliance guidance",
+    "kpis/": "KPI definitions, measurement scripts, raw session data, and computed metrics"
+  }
+}
