@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/banner.png" alt="Vigil: privacy compliance that reads your code and cites the clause. DPDP Act 2023, DPDP Rules 2025, EU GDPR, UK GDPR." width="100%">
+  <img src="docs/assets/banner.png" alt="Vigil: privacy compliance that reads your code and cites the clause. A critical finding is highlighted: Aadhaar numbers stored in plaintext, DPDP s.8(5), Rule 6(1)(a), db/migrations/0007_kyc.sql:14." width="100%">
 </p>
 
 <p align="center">
@@ -9,11 +9,11 @@
 
 <p align="center">
   <a href="https://github.com/prathikcannotcode/Vigil/actions/workflows/ci.yml"><img src="https://github.com/prathikcannotcode/Vigil/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-f0a63a" alt="License: Apache 2.0"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-0F1317" alt="License: Apache 2.0"></a>
   <img src="https://img.shields.io/badge/DPDP-Act%202023%20%2B%20Rules%202025-f0a63a" alt="DPDP Act 2023 and Rules 2025">
-  <img src="https://img.shields.io/badge/GDPR-EU%20%2B%20UK%20DUAA%202025-7aa7e0" alt="EU GDPR and UK GDPR">
-  <img src="https://img.shields.io/badge/Claude%20Code-20%20skills-d97757" alt="20 Claude Code skills">
-  <img src="https://img.shields.io/badge/dependencies-0-5fb38e" alt="Zero dependencies">
+  <img src="https://img.shields.io/badge/GDPR-EU%20%2B%20UK%20DUAA%202025-0F1317" alt="EU GDPR and UK GDPR">
+  <img src="https://img.shields.io/badge/Claude%20Code-20%20skills-0F1317" alt="20 Claude Code skills">
+  <img src="https://img.shields.io/badge/dependencies-0-0F1317" alt="Zero dependencies">
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@
 
 ## The DPDP clock
 
-<img src="docs/assets/dpdp-clock.png" alt="DPDP timeline: Act assented 11 Aug 2023; Rules notified and Board provisions in force 13 Nov 2025; Consent Managers 13 Nov 2026; all remaining obligations and penalties up to Rs 250 crore from 13 May 2027." width="100%">
+<img src="docs/assets/dpdp-clock.png" alt="DPDP timeline: Act assented 11 Aug 2023; Rules notified and Data Protection Board provisions in force 13 Nov 2025; Consent Managers register 13 Nov 2026; everything else, with penalties up to ₹250 crore, from 13 May 2027. MeitY has consulted on an earlier date; not notified as of 2 Nov 2026." width="100%">
 
 India's Digital Personal Data Protection Rules switch on in stages. The Data Protection Board has existed on paper since November 2025. Consent Managers can register from 13 November 2026. On **13 May 2027** everything else lands at once: notices, consent, security safeguards, 72-hour breach reports, Data Principal rights, and penalties of up to ₹250 crore for a single failed safeguard. MeitY has already consulted on pulling that date forward.
 
@@ -39,7 +39,7 @@ It won't tell you you're compliant. It will tell you which line of which file sa
 
 ## What a run looks like
 
-<img src="docs/assets/terminal.png" alt="Illustrative /audit run on the synthetic sample-co workspace: four phases, a DPDP and GDPR posture table, top findings with clauses and file locations, maximum penalty exposure, and schema-validated output files." width="100%">
+<img src="docs/assets/terminal.png" alt="Illustrative /audit run on the synthetic sample-co workspace: one critical finding (Aadhaar numbers stored in plaintext, DPDP s.8(5), Rule 6(1)(a)) and three high findings, a DPDP and GDPR posture grid across six dimensions, maximum theoretical exposure of ₹650 crore under DPDP and €90M under GDPR, and the three files written." width="100%">
 
 That run is on **sample-co**, a synthetic lending app that ships with the repo, so you can see real output before pointing Vigil at anything of yours:
 
@@ -232,7 +232,7 @@ Plus 7 consent notice templates (including Hindi) in [`examples/consent-notices`
 | `company-profile/{id}/` | Per-organisation data: details, data map, consent records, DPIAs, logs, posture |
 | `assessments/{id}/` | Point-in-time audits: report, posture, summary |
 | `examples/` | Consent notice templates and sector guides |
-| `docs/assets/` | README images; sources in `docs/assets/src/` |
+| `docs/assets/` | README images, logo, [brand sheet](docs/assets/brand-sheet.png) and [design tokens](docs/assets/vigil-tokens.css) |
 
 ## FAQ
 

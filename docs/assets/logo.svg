@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Vigil">
+  <title>Vigil</title>
+  <rect width="512" height="512" fill="#0F1317"/>
+  <rect x="58" y="172" width="396" height="68" fill="#F0A63A"/>
+  <path transform="translate(110.37 401.54) scale(0.44230 -0.44230)" fill="#EFEEE8" d="M271 -1.0 40.6 655H234L393 162H375L380 175L540 655H604L377 -1.0ZM7.0 602V655H336V605L192 587H148ZM442 605V655H651V602L562 587H547Z"/>
+</svg>

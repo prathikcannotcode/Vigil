@@ -1,0 +1,28 @@
+/* Vigil brand tokens.
+   Faces: Source Serif 4 (what Vigil says) and JetBrains Mono (what it cites). Both OFL, both on Google Fonts. */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700;8..60,800&display=swap');
+
+:root {
+  /* three flat grounds */
+  --ink: #0F1317;
+  --paper: #EFEEE8;
+  --amber: #F0A63A;          /* the highlight; whole-image ground for the deadline only */
+
+  /* secondary text, each checked at 4.5:1 or better on its ground */
+  --muted-on-ink: #A7B0B8;   /* 8.5:1 */
+  --muted-on-paper: #565D65; /* 5.7:1 */
+  --muted-on-amber: #3B2A0A; /* 6.7:1 */
+
+  /* status colors: posture grid only */
+  --red: #E5645A;
+  --yellow: #E8C45A;
+  --green: #5FB38E;
+
+  --serif: 'Source Serif 4', Georgia, serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* the lit line: one per image, flat, full width, off both edges.
+   On an amber ground it flips to an ink band with amber text. */
+.lit { background: var(--amber); color: var(--ink); }
+.lit-on-amber { background: var(--ink); color: var(--amber); }
