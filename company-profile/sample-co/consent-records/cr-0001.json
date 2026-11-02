@@ -1,0 +1,13 @@
+{
+  "id": "cr-0001",
+  "data_principal": "usr_7f3a",
+  "purpose": "Credit assessment using account aggregator bank statements",
+  "lawful_basis": "consent",
+  "method": "consent_manager",
+  "consent_manager_id": "[CONSENT MANAGER REFERENCE]",
+  "collected_at": "2026-10-01T18:22:00+05:30",
+  "withdrawn_at": null,
+  "status": "active",
+  "notice_version": "2026.09-en",
+  "framework": "both"
+}

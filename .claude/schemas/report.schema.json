@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Assessment Report",
+  "description": "assessments/{assessment_id}/report.json: the findings of one audit run",
+  "type": "object",
+  "required": ["assessment_id", "company_id", "scope", "started_at", "findings"],
+  "properties": {
+    "assessment_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "company_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "scope": { "type": "array", "minItems": 1, "items": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR"] } },
+    "started_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "assessor": { "type": "string", "description": "Who or what ran the audit, e.g. 'Vigil on Claude Code'" },
+    "coverage": {
+      "type": "object",
+      "required": ["applicable", "examined"],
+      "properties": {
+        "applicable": { "type": "integer", "minimum": 0, "description": "Controls (sections, rules, articles) that apply to this organisation" },
+        "examined": { "type": "integer", "minimum": 0, "description": "Controls the audit actually examined" }
+      },
+      "additionalProperties": false
+    },
+    "findings": { "type": "array", "items": { "$ref": "finding.schema.json" } }
+  },
+  "additionalProperties": false
+}

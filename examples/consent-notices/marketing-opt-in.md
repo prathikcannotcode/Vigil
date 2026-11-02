@@ -4,7 +4,7 @@
 
 ---
 
-## [COMPANY NAME] — Marketing Preferences
+## [COMPANY NAME]: Marketing Preferences
 
 Choose how you want to hear from us. Every option below is optional and independent.
 
@@ -51,7 +51,7 @@ Withdrawal is immediate for future communications. We may take up to [48 hours /
 
 **Customisation notes:**
 - Replace all [PLACEHOLDER] values
-- All checkboxes must start unchecked (DPDP Rule 3, GDPR Recital 32)
-- Ensure unsubscribe is as easy as subscribing (DPDP Section 6(6))
+- All checkboxes must start unchecked (DPDP Section 6(1) clear affirmative action, GDPR Recital 32)
+- Ensure unsubscribe is as easy as subscribing (DPDP Section 6(4))
 - For GDPR: soft opt-in for existing customers may apply under ePrivacy in some Member States, but explicit consent is the safe default
 - Track which version of this notice each user saw (for consent records)

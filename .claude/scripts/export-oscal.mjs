@@ -6,9 +6,10 @@
  * Usage: node .claude/scripts/export-oscal.mjs --company <id> --output assessment-results.json
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { loadFindings, packageVersion } from './lib.mjs';
 
 const args = process.argv.slice(2);
 function flag(name) {
@@ -24,35 +25,50 @@ if (!company) {
   process.exit(1);
 }
 
-const profileDir = join('company-profile', company);
-const postureFile = join(profileDir, 'posture.json');
+const postureFile = join('company-profile', company, 'posture.json');
+const posture = existsSync(postureFile) ? JSON.parse(readFileSync(postureFile, 'utf8')) : null;
+const findings = loadFindings(company);
+const now = new Date().toISOString();
 
-let posture = null;
-if (existsSync(postureFile)) {
-  posture = JSON.parse(readFileSync(postureFile, 'utf8'));
-}
-
-// Collect findings from assessments
-const findings = [];
-const assessDir = 'assessments';
-if (existsSync(assessDir)) {
-  for (const entry of readdirSync(assessDir, { recursive: true })) {
-    if (entry.endsWith('.json') && !entry.endsWith('.gitkeep')) {
-      try {
-        const data = JSON.parse(readFileSync(join(assessDir, entry), 'utf8'));
-        if (data.findings) findings.push(...data.findings);
-      } catch { /* skip */ }
-    }
+const observations = [];
+const oscalFindings = findings.map(f => {
+  let related = [];
+  if (f.file) {
+    const uuid = randomUUID();
+    observations.push({
+      uuid,
+      description: `${f.framework || 'Unknown'} finding in ${f.file}${f.line ? `:${f.line}` : ''}`,
+      methods: ['EXAMINE'],
+      'relevant-evidence': [{ href: f.file, description: f.issue }],
+      collected: f.found_at || now,
+    });
+    related = [{ 'observation-uuid': uuid }];
   }
-}
+  return {
+    uuid: randomUUID(),
+    title: f.issue || 'Untitled finding',
+    description: f.recommendation || '',
+    target: {
+      'target-id': f.clause || 'unknown',
+      type: 'objective-id',
+      status: { state: f.status === 'remediated' ? 'satisfied' : 'not-satisfied' },
+    },
+    ...(related.length ? { 'related-observations': related } : {}),
+    props: [
+      { name: 'severity', value: f.severity },
+      { name: 'framework', value: f.framework },
+      { name: 'vigil-id', value: f.id },
+    ],
+  };
+});
 
 const oscal = {
   'assessment-results': {
     uuid: randomUUID(),
     metadata: {
       title: `Vigil Assessment Results: ${company}`,
-      'last-modified': new Date().toISOString(),
-      version: '1.0.0',
+      'last-modified': now,
+      version: packageVersion(),
       'oscal-version': '1.1.2',
       roles: [{ id: 'assessor', title: 'Vigil Automated Assessor' }],
     },
@@ -64,39 +80,16 @@ const oscal = {
       uuid: randomUUID(),
       title: `${company} Privacy Compliance Assessment`,
       description: `Automated DPDP and GDPR compliance assessment for ${company}`,
-      start: new Date().toISOString(),
-      findings: findings.map(f => ({
-        uuid: randomUUID(),
-        title: f.issue || 'Untitled finding',
-        description: f.recommendation || '',
-        target: {
-          'target-id': f.clause || 'unknown',
-          type: 'objective-id',
-          status: { state: f.status === 'remediated' ? 'satisfied' : 'not-satisfied' },
-        },
-        'related-observations': f.file ? [{
-          'observation-uuid': randomUUID(),
-        }] : [],
-      })),
-      observations: findings.filter(f => f.file).map(f => ({
-        uuid: randomUUID(),
-        description: `${f.framework || 'Unknown'} finding in ${f.file}${f.line ? `:${f.line}` : ''}`,
-        methods: ['EXAMINE'],
-        'relevant-evidence': [{
-          description: f.issue,
-          href: f.file,
-        }],
-        collected: f.found_at || new Date().toISOString(),
-      })),
+      start: now,
+      'reviewed-controls': { 'control-selections': [{ 'include-all': {} }] },
+      ...(observations.length ? { observations } : {}),
+      ...(oscalFindings.length ? { findings: oscalFindings } : {}),
+      ...(posture ? {
+        remarks: `Overall posture: ${posture.overall || 'not assessed'}. Dimensions assessed: ${(posture.dimensions || []).length}.`,
+      } : {}),
     }],
   },
 };
-
-if (posture) {
-  oscal['assessment-results'].results[0].remarks =
-    `Overall posture: ${posture.overall || 'not assessed'}. ` +
-    `Dimensions assessed: ${(posture.dimensions || []).length}.`;
-}
 
 writeFileSync(outputFile, JSON.stringify(oscal, null, 2));
 console.log(`OSCAL Assessment Results exported: ${findings.length} findings -> ${outputFile}`);

@@ -1,0 +1,15 @@
+{
+  "company_id": "sample-co",
+  "assessed_at": "2026-10-19T10:41:00+05:30",
+  "overall": "non_compliant",
+  "dimensions": [
+    { "name": "governance", "dpdp_status": "partially_compliant", "gdpr_status": "compliant", "notes": "DPO appointed; board reporting not yet running", "findings_count": 0 },
+    { "name": "lawful_processing", "dpdp_status": "non_compliant", "gdpr_status": "partially_compliant", "notes": "Bundled marketing consent; withdrawal harder than giving", "findings_count": 2 },
+    { "name": "rights", "dpdp_status": "partially_compliant", "gdpr_status": "compliant", "notes": "Grievance response period not published", "findings_count": 1 },
+    { "name": "security", "dpdp_status": "non_compliant", "gdpr_status": "non_compliant", "notes": "Plaintext Aadhaar; no 72-hour notification step", "findings_count": 2 },
+    { "name": "third_parties", "dpdp_status": "compliant", "gdpr_status": "non_compliant", "notes": "US helpdesk without transfer mechanism; analytics DPA missing", "findings_count": 2 },
+    { "name": "retention", "dpdp_status": "non_compliant", "gdpr_status": "non_compliant", "notes": "No deletion job; credit data has no retention period", "findings_count": 1 }
+  ],
+  "finding_summary": { "critical": 1, "high": 3, "medium": 3, "low": 1 },
+  "penalty_exposure": { "dpdp_inr": 6500000000, "gdpr_eur": 90000000 }
+}

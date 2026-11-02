@@ -1,44 +1,30 @@
 #!/usr/bin/env node
 
 /**
- * Post-write validation hook. Validates JSON/JSONL files after every write.
- * Used as a PostToolUse hook on Edit and Write tools.
- * Exits 1 on invalid JSON to surface the error.
+ * Post-write validation hook. Validates JSON/JSONL files against their layout
+ * schema after every write. Used as a PostToolUse hook on Write, Edit and MultiEdit.
+ * Exits 2 so the agent sees the errors and fixes the file.
  */
 
-import { readFileSync } from 'node:fs';
-import { extname } from 'node:path';
+import { resolve, relative } from 'node:path';
+import { checkFile } from './lib.mjs';
 
-let input = '';
+const root = process.cwd();
+
+let raw = '';
 process.stdin.setEncoding('utf8');
-process.stdin.on('data', (chunk) => { input += chunk; });
+process.stdin.on('data', chunk => { raw += chunk; });
 process.stdin.on('end', () => {
-  try {
-    const event = JSON.parse(input);
-    const filePath = event.tool_input?.file_path;
-    if (!filePath) process.exit(0);
+  let filePath;
+  try { filePath = JSON.parse(raw).tool_input?.file_path; }
+  catch { process.exit(0); }
+  if (!filePath) process.exit(0);
 
-    const ext = extname(filePath);
-    if (ext === '.json') {
-      try {
-        JSON.parse(readFileSync(filePath, 'utf8'));
-      } catch (e) {
-        console.error(`Validation failed: ${filePath} is not valid JSON: ${e.message}`);
-        process.exit(1);
-      }
-    } else if (ext === '.jsonl') {
-      const lines = readFileSync(filePath, 'utf8').split('\n').filter(Boolean);
-      for (let i = 0; i < lines.length; i++) {
-        try {
-          JSON.parse(lines[i]);
-        } catch (e) {
-          console.error(`Validation failed: ${filePath} line ${i + 1} is not valid JSON: ${e.message}`);
-          process.exit(1);
-        }
-      }
-    }
-    process.exit(0);
-  } catch {
-    process.exit(0);
+  const rel = relative(root, resolve(root, filePath)).replace(/\\/g, '/');
+  const errors = checkFile(rel, root);
+  if (errors.length) {
+    console.error(`Validation failed for ${rel}:\n  ${errors.join('\n  ')}`);
+    process.exit(2);
   }
+  process.exit(0);
 });

@@ -12,6 +12,8 @@
       "enum": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests"],
       "description": "GDPR Art. 6(1) basis; DPDP uses consent or certain legitimate uses"
     },
+    "method": { "type": "string", "enum": ["checkbox", "toggle", "signed_form", "consent_manager", "other"], "description": "How consent was collected" },
+    "consent_manager_id": { "type": "string", "description": "Registered Consent Manager reference when consent came through one (DPDP s.6(7), Rule 4)" },
     "collected_at": { "type": "string", "format": "date-time" },
     "withdrawn_at": { "type": ["string", "null"], "format": "date-time" },
     "status": { "type": "string", "enum": ["active", "withdrawn", "expired"] },

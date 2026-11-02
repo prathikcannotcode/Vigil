@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Breach Log Entry",
+  "description": "One line of company-profile/{id}/breach-log.jsonl. Each lifecycle event is a new line sharing the breach_id; earlier lines are never edited.",
+  "type": "object",
+  "required": ["breach_id", "recorded_at", "event", "summary"],
+  "properties": {
+    "breach_id": { "type": "string", "pattern": "^BR-[0-9]{4,}$" },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "event": {
+      "type": "string",
+      "enum": ["detected", "assessed", "contained", "notified_board", "notified_principals", "notified_supervisory_authority", "notified_data_subjects", "notified_cert_in", "notified_sectoral_regulator", "reviewed", "closed", "near_miss"]
+    },
+    "aware_at": { "type": "string", "format": "date-time", "description": "When the organisation became aware. Starts the 72-hour clocks under DPDP Rule 7(2)(b) and GDPR Art. 33(1)." },
+    "breach_type": { "type": "array", "items": { "type": "string", "enum": ["confidentiality", "integrity", "availability"] } },
+    "data_categories": { "type": "array", "items": { "type": "string" } },
+    "principals_affected": { "type": "integer", "minimum": 0, "description": "Approximate count. Never names or identifiers." },
+    "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+    "frameworks": { "type": "array", "items": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR"] } },
+    "recipient": { "type": "string", "description": "Who was notified, e.g. 'Data Protection Board of India', 'CERT-In'" },
+    "deadline": { "type": "string", "format": "date-time" },
+    "reference": { "type": "string", "description": "External acknowledgement or ticket number" },
+    "summary": { "type": "string", "minLength": 1, "description": "What happened, without personal data" }
+  },
+  "additionalProperties": false
+}

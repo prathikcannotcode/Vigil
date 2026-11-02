@@ -27,7 +27,7 @@
 ## Healthcare-specific DPDP obligations
 
 ### Consent
-- Treatment: may rely on DPDP Section 7(d) (medical emergency) or Section 7(a) (voluntary health service) for core treatment
+- Treatment: may rely on DPDP Section 7(f) (medical emergency) or Section 7(a) (data voluntarily provided for the health service) for core treatment
 - Research: explicit consent under Section 6; separate from treatment consent
 - Insurance sharing: separate consent per insurer
 - Marketing: explicit consent; never use health data for marketing

@@ -1,0 +1,61 @@
+/* Shared tokens for Vigil's README and launch images. Render with docs/assets/src/render.sh */
+@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #0d1014;
+  --ink-2: #151a20;
+  --ink-3: #1d242c;
+  --line: #2a323c;
+  --paper: #f3eee4;
+  --muted: #9aa3ad;
+  --dim: #8b949e;
+  --amber: #f0a63a;
+  --amber-soft: rgba(240, 166, 58, 0.14);
+  --green: #5fb38e;
+  --red: #e5645a;
+  --yellow: #e8c45a;
+  --blue: #7aa7e0;
+  --serif: 'Libre Caslon Text', Georgia, serif;
+  --sans: 'IBM Plex Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --mono: 'IBM Plex Mono', Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { background: var(--ink); color: var(--paper); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+  border-top: 6px solid var(--amber);
+}
+
+.frame::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(243, 238, 228, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  pointer-events: none;
+}
+
+.mark { display: block; }
+
+.chip {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  align-items: baseline;
+  padding: 14px 18px;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-family: var(--mono);
+}
+.chip .sev { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 5px; }
+.sev.critical { color: #1a0b09; background: var(--red); }
+.sev.high { color: #1a1206; background: var(--amber); }
+.sev.medium { color: #19160a; background: var(--yellow); }
+.chip .clause { color: var(--amber); font-size: 15px; font-weight: 500; }
+.chip .issue { grid-column: 2; color: var(--paper); font-family: var(--sans); font-size: 17px; }
+.chip .where { grid-column: 2; color: var(--dim); font-size: 13px; }

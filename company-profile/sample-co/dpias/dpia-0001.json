@@ -1,0 +1,42 @@
+{
+  "id": "dpia-0001",
+  "company_id": "sample-co",
+  "framework": "both",
+  "status": "under_review",
+  "processing_description": {
+    "nature": "Automated credit scoring from bank statement data",
+    "scope": "All loan applicants in India and the EU",
+    "context": "Data arrives through an account aggregator with per-purpose consent",
+    "purpose": "Decide loan eligibility and pricing",
+    "data_categories": ["bank transactions", "repayment history", "income band"],
+    "data_subjects": ["loan applicants"]
+  },
+  "necessity_assessment": {
+    "is_necessary": true,
+    "less_intrusive_alternative": "Use a 6-month transaction window instead of 24 months",
+    "lawful_basis": "DPDP s.6 consent; GDPR Art. 6(1)(b) and Art. 22(2)(a)",
+    "proportionate": false
+  },
+  "risks": [
+    {
+      "description": "Model denies credit to applicants from thin-file segments without human review",
+      "category": "rights_impact",
+      "likelihood": "medium",
+      "impact": "high",
+      "risk_level": "high",
+      "mitigation": "Human review of every decline; reason codes shown to the applicant; DPDP Rule 13(3) algorithmic due diligence",
+      "residual_risk": "medium"
+    },
+    {
+      "description": "Bank statements retained after the loan decision with no retention limit",
+      "category": "confidentiality",
+      "likelihood": "high",
+      "impact": "medium",
+      "risk_level": "high",
+      "mitigation": "Delete raw statements 90 days after decision; keep derived features only",
+      "residual_risk": "low"
+    }
+  ],
+  "dpo_sign_off": null,
+  "created_at": "2026-10-19T14:00:00+05:30"
+}

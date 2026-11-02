@@ -1,0 +1,81 @@
+{
+  "company_id": "sample-co",
+  "mapped_at": "2026-10-19T12:00:00+05:30",
+  "data_flows": [
+    {
+      "id": "DF-01",
+      "data_type": "name, email, mobile number",
+      "classification": "direct_identifier",
+      "purpose": "Account creation and login",
+      "lawful_basis": "contract",
+      "source": "web and mobile signup",
+      "destination": "accounts Postgres (ap-south-1)",
+      "processors": ["[CLOUD PROVIDER]"],
+      "cross_border": false,
+      "transfer_mechanism": null,
+      "retention_period": "Life of account + 3 years",
+      "encryption": true,
+      "dpa_in_place": true
+    },
+    {
+      "id": "DF-02",
+      "data_type": "Aadhaar number, PAN, selfie for video KYC",
+      "classification": "direct_identifier",
+      "purpose": "KYC under RBI Master Direction on KYC",
+      "lawful_basis": "legal_obligation",
+      "source": "KYC flow",
+      "destination": "kyc_documents table",
+      "processors": ["[KYC VENDOR]"],
+      "cross_border": false,
+      "transfer_mechanism": null,
+      "retention_period": "5 years after relationship ends (PMLA)",
+      "encryption": false,
+      "dpa_in_place": true
+    },
+    {
+      "id": "DF-03",
+      "data_type": "bank statements, repayment history",
+      "classification": "special_category",
+      "purpose": "Credit assessment",
+      "lawful_basis": "consent",
+      "source": "account aggregator",
+      "destination": "credit scoring service",
+      "processors": [],
+      "cross_border": false,
+      "transfer_mechanism": null,
+      "retention_period": "Not defined",
+      "encryption": true,
+      "dpa_in_place": false
+    },
+    {
+      "id": "DF-04",
+      "data_type": "support tickets with name and email (EU customers)",
+      "classification": "direct_identifier",
+      "purpose": "Customer support",
+      "lawful_basis": "contract",
+      "source": "in-app chat",
+      "destination": "US-hosted helpdesk",
+      "processors": ["[HELPDESK VENDOR]"],
+      "cross_border": true,
+      "transfer_mechanism": null,
+      "retention_period": "2 years",
+      "encryption": true,
+      "dpa_in_place": true
+    },
+    {
+      "id": "DF-05",
+      "data_type": "device ID, screen events",
+      "classification": "indirect_identifier",
+      "purpose": "Product analytics",
+      "lawful_basis": "legitimate_interests",
+      "source": "mobile SDK",
+      "destination": "[ANALYTICS VENDOR]",
+      "processors": ["[ANALYTICS VENDOR]"],
+      "cross_border": true,
+      "transfer_mechanism": "scc",
+      "retention_period": "14 months",
+      "encryption": true,
+      "dpa_in_place": false
+    }
+  ]
+}

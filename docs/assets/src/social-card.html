@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vigil social card</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { width: 1280px; height: 640px; }
+  .frame { width: 1280px; height: 640px; padding: 64px 72px; display: flex; flex-direction: column; justify-content: space-between; }
+  .top { position: relative; display: flex; align-items: center; gap: 16px; font-family: var(--serif); font-weight: 700; font-size: 40px; }
+  .top .repo { margin-left: auto; font-family: var(--mono); font-weight: 400; font-size: 18px; color: var(--muted); }
+  h1 { position: relative; font-family: var(--serif); font-weight: 700; font-size: 70px; line-height: 1.02; letter-spacing: -0.02em; max-width: 1050px; }
+  h1 span { color: var(--amber); white-space: nowrap; }
+  .row { position: relative; display: grid; grid-template-columns: 1fr 470px; gap: 40px; align-items: end; }
+  .sub { font-size: 25px; line-height: 1.4; color: var(--paper); }
+  .sub b { color: var(--amber); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="top">
+    <svg width="56" height="56" viewBox="0 0 84 84" aria-hidden="true">
+      <rect x="2" y="2" width="80" height="80" rx="22" fill="#151a20" stroke="#2a323c" stroke-width="2"/>
+      <circle cx="42" cy="26" r="7" fill="#f0a63a"/>
+      <circle cx="42" cy="26" r="15" fill="none" stroke="#f0a63a" stroke-opacity="0.35" stroke-width="2"/>
+      <path d="M24 42 L42 64 L60 42" fill="none" stroke="#f3eee4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Vigil
+    <span class="repo">github.com/prathikcannotcode/Vigil</span>
+  </div>
+  <h1>India's DPDP Act switches on <span>13 May 2027</span>. Your codebase can find out first.</h1>
+  <div class="row">
+    <div class="sub">Open-source DPDP + GDPR audits inside Claude Code. Findings cite the clause and point at <b>file:line</b>.</div>
+    <div class="chip">
+      <span class="sev critical">CRITICAL</span><span class="clause">DPDP s.8(5) · Rule 6(1)(a)</span>
+      <span class="issue">Aadhaar numbers stored in plaintext</span>
+      <span class="where">db/migrations/0007_kyc.sql:14</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

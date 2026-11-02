@@ -1,0 +1,29 @@
+name: Regulatory change
+description: A law, rule, order, judgment or guidance that Vigil's skills should reflect
+labels: [regulatory]
+body:
+  - type: input
+    id: instrument
+    attributes:
+      label: Instrument
+      description: Name and number, e.g. "DPDP (Amendment) Rules, 2027, G.S.R. ___(E)"
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Official source
+      description: Gazette, EUR-Lex, legislation.gov.uk, regulator site. Secondary commentary is welcome as extra context but not as the only source.
+    validations:
+      required: true
+  - type: input
+    id: effective
+    attributes:
+      label: Effective date
+  - type: textarea
+    id: change
+    attributes:
+      label: What changed
+      description: Which clause, and which skills or catalogs it affects (e.g. dpdp-catalog, dpdp-breach)
+    validations:
+      required: true

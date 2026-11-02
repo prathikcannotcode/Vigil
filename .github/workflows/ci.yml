@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate workspace against schemas
+        run: npm run validate -- --strict
+      - name: Test guardrails
+        run: npm test
+      - name: Export sample findings
+        run: |
+          npm run export:sarif -- --company sample-co --output sample.sarif
+          npm run export:oscal -- --company sample-co --output sample.oscal.json
+          npm run export:ocsf -- --company sample-co --output sample.ocsf.jsonl

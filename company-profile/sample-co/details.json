@@ -1,0 +1,17 @@
+{
+  "id": "sample-co",
+  "legal_name": "Sample Co Technologies Pvt Ltd (synthetic demo company)",
+  "jurisdiction": ["IN", "EU"],
+  "sector": "fintech",
+  "frameworks": ["DPDP", "GDPR", "RBI"],
+  "sdf_status": "likely",
+  "processes_children_data": false,
+  "processes_sensitive_data": true,
+  "dpo": {
+    "name": "[DPO NAME]",
+    "email": "dpo@sample-co.example",
+    "appointed_at": "2026-09-01"
+  },
+  "created_at": "2026-10-19T09:00:00+05:30",
+  "updated_at": "2026-10-19T17:30:00+05:30"
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rights Log Entry",
+  "description": "One line of company-profile/{id}/rights-log.jsonl. Each step of a request is a new line sharing the request_id; earlier lines are never edited.",
+  "type": "object",
+  "required": ["request_id", "recorded_at", "event", "right", "framework"],
+  "properties": {
+    "request_id": { "type": "string", "pattern": "^RR-[0-9]{4,}$" },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "event": {
+      "type": "string",
+      "enum": ["received", "acknowledged", "identity_verified", "extended", "fulfilled", "refused", "escalated", "withdrawn"]
+    },
+    "right": {
+      "type": "string",
+      "enum": ["access", "correction", "completion", "updating", "erasure", "grievance", "nomination", "withdraw_consent", "restriction", "portability", "objection", "automated_decision"]
+    },
+    "framework": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR"] },
+    "data_principal": { "type": "string", "description": "Pseudonymised identifier only" },
+    "channel": { "type": "string", "description": "e.g. 'web form', 'email', 'consent manager'" },
+    "due_at": { "type": "string", "format": "date-time" },
+    "refusal_basis": { "type": "string", "description": "Legal basis cited when a request is refused" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

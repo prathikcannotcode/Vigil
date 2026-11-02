@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vigil banner</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { width: 1280px; height: 440px; }
+  .frame { width: 1280px; height: 440px; padding: 64px 72px; display: grid; grid-template-columns: 1fr 520px; gap: 48px; align-items: center; }
+  .brand { position: relative; display: flex; flex-direction: column; gap: 34px; }
+  .logo { display: flex; align-items: center; gap: 20px; }
+  .word { font-family: var(--serif); font-weight: 700; font-size: 104px; line-height: 0.9; letter-spacing: -0.02em; }
+  .tag { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.15; max-width: 600px; }
+  .tag em { font-style: normal; color: var(--amber); }
+  .meta { font-family: var(--mono); font-size: 15px; line-height: 1.7; color: var(--muted); letter-spacing: 0.02em; }
+  .meta b { color: var(--paper); font-weight: 500; }
+  .stack { position: relative; display: flex; flex-direction: column; gap: 12px; }
+  .stack .chip:nth-child(2) { margin-left: 26px; opacity: 0.92; }
+  .stack .chip:nth-child(3) { margin-left: 52px; opacity: 0.8; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="brand">
+    <div class="logo">
+      <svg class="mark" width="84" height="84" viewBox="0 0 84 84" aria-hidden="true">
+        <rect x="2" y="2" width="80" height="80" rx="22" fill="#151a20" stroke="#2a323c" stroke-width="2"/>
+        <circle cx="42" cy="26" r="7" fill="#f0a63a"/>
+        <circle cx="42" cy="26" r="15" fill="none" stroke="#f0a63a" stroke-opacity="0.35" stroke-width="2"/>
+        <path d="M24 42 L42 64 L60 42" fill="none" stroke="#f3eee4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="word">Vigil</div>
+    </div>
+    <div class="tag">Privacy compliance that <em>reads your code</em> and cites the clause.</div>
+    <div class="meta"><b>DPDP Act 2023</b> · DPDP Rules 2025 · <b>EU GDPR</b> · UK GDPR<br>20 Claude Code skills · runs locally · Apache 2.0</div>
+  </div>
+  <div class="stack">
+    <div class="chip">
+      <span class="sev critical">CRITICAL</span><span class="clause">DPDP s.8(5) · Rule 6(1)(a)</span>
+      <span class="issue">Aadhaar numbers stored in plaintext</span>
+      <span class="where">db/migrations/0007_kyc.sql:14</span>
+    </div>
+    <div class="chip">
+      <span class="sev high">HIGH</span><span class="clause">DPDP Rule 7(2)(b) · GDPR Art. 33</span>
+      <span class="issue">No 72-hour breach report step in the runbook</span>
+      <span class="where">docs/runbooks/incident-response.md</span>
+    </div>
+    <div class="chip">
+      <span class="sev high">HIGH</span><span class="clause">GDPR Art. 44</span>
+      <span class="issue">EU tickets reach a US helpdesk with no SCCs</span>
+      <span class="where">data flow DF-04</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

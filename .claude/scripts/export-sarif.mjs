@@ -7,8 +7,8 @@
  *        node .claude/scripts/export-sarif.mjs --company <id> --output findings.sarif
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
-import { join, extname } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { loadFindings, packageVersion } from './lib.mjs';
 
 const args = process.argv.slice(2);
 function flag(name) {
@@ -20,54 +20,37 @@ const inputFile = flag('input');
 const company = flag('company');
 const outputFile = flag('output') || 'findings.sarif';
 
-function loadFindings() {
-  if (inputFile) {
-    return JSON.parse(readFileSync(inputFile, 'utf8')).findings || [];
-  }
-  if (company) {
-    const dir = join('assessments');
-    if (!existsSync(dir)) return [];
-    const files = [];
-    for (const entry of readdirSync(dir, { recursive: true })) {
-      if (entry.endsWith('.json')) {
-        try {
-          const data = JSON.parse(readFileSync(join(dir, entry), 'utf8'));
-          if (data.findings) files.push(...data.findings);
-        } catch { /* skip */ }
-      }
-    }
-    return files;
-  }
-  console.error('Provide --input <file> or --company <id>');
+if (!inputFile && !company) {
+  console.error('Provide --input <report.json> or --company <id>');
   process.exit(1);
 }
+
+const findings = inputFile
+  ? JSON.parse(readFileSync(inputFile, 'utf8')).findings ?? []
+  : loadFindings(company);
 
 function severityToLevel(sev) {
   switch (sev) {
     case 'critical': case 'high': return 'error';
     case 'medium': return 'warning';
-    case 'low': return 'note';
     default: return 'note';
   }
 }
 
 function clauseToRuleId(clause, framework) {
   if (!clause) return 'unknown';
-  const prefix = framework === 'GDPR' || framework === 'UK-GDPR' ? 'GDPR' : 'DPDP';
-  const normalised = clause.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/-$/, '');
+  const prefix = framework === 'GDPR' || framework === 'UK-GDPR' ? framework : 'DPDP';
+  const normalised = clause.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   return `${prefix}-${normalised}`;
 }
 
-const findings = loadFindings();
 const rules = new Map();
-
 for (const f of findings) {
   const ruleId = clauseToRuleId(f.clause, f.framework);
   if (!rules.has(ruleId)) {
     rules.set(ruleId, {
       id: ruleId,
-      shortDescription: { text: f.clause || 'Unknown clause' },
-      fullDescription: { text: `${f.framework || 'Unknown'} ${f.clause || ''}` },
+      shortDescription: { text: `${f.framework || 'Unknown'} ${f.clause || 'unknown clause'}` },
       defaultConfiguration: { level: severityToLevel(f.severity) },
     });
   }
@@ -81,34 +64,25 @@ const sarif = {
       driver: {
         name: 'Vigil',
         informationUri: 'https://github.com/prathikcannotcode/Vigil',
-        version: '0.1.0',
+        version: packageVersion(),
         rules: [...rules.values()],
       },
     },
-    results: findings.map(f => {
-      const result = {
-        ruleId: clauseToRuleId(f.clause, f.framework),
-        level: severityToLevel(f.severity),
-        message: { text: f.issue || '' },
-      };
-
-      if (f.file) {
-        result.locations = [{
+    results: findings.map(f => ({
+      ruleId: clauseToRuleId(f.clause, f.framework),
+      level: severityToLevel(f.severity),
+      // SARIF `fixes` require concrete artifactChanges, so the recommendation travels in the message.
+      message: { text: f.recommendation ? `${f.issue} Recommendation: ${f.recommendation}` : f.issue || '' },
+      ...(f.file ? {
+        locations: [{
           physicalLocation: {
             artifactLocation: { uri: f.file },
             ...(f.line ? { region: { startLine: f.line } } : {}),
           },
-        }];
-      }
-
-      if (f.recommendation) {
-        result.fixes = [{
-          description: { text: f.recommendation },
-        }];
-      }
-
-      return result;
-    }),
+        }],
+      } : {}),
+      properties: { id: f.id, severity: f.severity, status: f.status ?? 'open', clause: f.clause },
+    })),
   }],
 };
 

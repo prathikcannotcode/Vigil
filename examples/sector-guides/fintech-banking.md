@@ -29,8 +29,8 @@
 ### Significant Data Fiduciary (SDF) designation
 Banks, NBFCs, and large fintechs processing high volumes of financial data are likely to be designated as SDFs under DPDP Section 10. SDF obligations:
 - Appoint a DPO based in India (Section 10(2)(a))
-- Conduct DPIA (Section 10(2)(b))
-- Periodic audit by independent auditor (Section 10(2)(c))
+- Appoint an independent data auditor (Section 10(2)(b))
+- Conduct a DPIA and data audit every 12 months (Section 10(2)(c), Rule 13)
 - Process certain categories of data only in India
 
 ### Consent in financial services

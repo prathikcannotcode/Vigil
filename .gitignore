@@ -9,3 +9,5 @@ kpis/data/raw/sessions/**/*.json
 *.oscal.json
 .DS_Store
 Thumbs.db
+*.ocsf.jsonl
+launch-kit/

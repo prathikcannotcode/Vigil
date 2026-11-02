@@ -34,7 +34,7 @@ DPDP Section 9 applies to all students under 18. This covers most K-12 and many 
 **Required:**
 - Verifiable parental/guardian consent before collecting any data (Section 9, Rule 10)
 - No behavioural monitoring or targeted advertising directed at children (Section 9(3))
-- No processing detrimental to the child's well-being (Section 9(4))
+- No processing detrimental to the child's well-being (Section 9(2))
 - No tracking beyond what is necessary for the educational service
 
 **Prohibited:**

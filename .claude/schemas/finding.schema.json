@@ -4,16 +4,20 @@
   "type": "object",
   "required": ["id", "severity", "framework", "clause", "issue", "recommendation"],
   "properties": {
-    "id": { "type": "string", "pattern": "^F-[0-9]{4}$" },
+    "id": { "type": "string", "pattern": "^F-[0-9]{4,}$" },
     "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
     "framework": { "type": "string", "enum": ["DPDP", "GDPR", "UK-GDPR"] },
-    "clause": { "type": "string", "description": "Regulatory reference, e.g. 'Section 8(1)' or 'Art. 32(1)(a)'" },
-    "issue": { "type": "string" },
-    "recommendation": { "type": "string" },
-    "file": { "type": "string", "description": "Source file path if code-related" },
-    "line": { "type": "integer" },
-    "status": { "type": "string", "enum": ["open", "remediated", "accepted", "disputed"], "default": "open" },
-    "found_at": { "type": "string", "format": "date-time" }
+    "clause": { "type": "string", "minLength": 1, "description": "Regulatory reference, e.g. 'Section 8(5)', 'Rule 7(2)' or 'Art. 32(1)(a)'" },
+    "cross_reference": { "type": "string", "description": "The equivalent clause in the other framework when a finding applies to both, e.g. 'GDPR Art. 33(1)'" },
+    "issue": { "type": "string", "minLength": 1 },
+    "recommendation": { "type": "string", "minLength": 1 },
+    "file": { "type": "string", "description": "Source file path if code-related. Never the data itself." },
+    "line": { "type": "integer", "minimum": 1 },
+    "owner": { "type": "string", "description": "Accountable role, e.g. 'DPO', 'Engineering Lead'" },
+    "due_date": { "type": "string", "format": "date" },
+    "status": { "type": "string", "enum": ["open", "in_progress", "remediated", "accepted", "disputed"], "default": "open" },
+    "found_at": { "type": "string", "format": "date-time" },
+    "remediated_at": { "type": "string", "format": "date-time" }
   },
   "additionalProperties": false
 }

@@ -4,7 +4,7 @@
 
 ---
 
-## [APP NAME] — Privacy Notice
+## [APP NAME]: Privacy Notice
 
 Welcome to [App Name]. Before you create your account, here is how we handle your data.
 
@@ -19,9 +19,9 @@ Welcome to [App Name]. Before you create your account, here is how we handle you
 | Name, email | Create and manage your account | Contract | Yes |
 | Phone number | Account verification (OTP) | Contract | Yes |
 | Profile photo | Personalise your profile | Consent | No |
-| Device ID, OS version | App stability and crash reporting | Legitimate interest / DPDP Section 7 | Yes |
+| Device ID, OS version | App stability and crash reporting | GDPR: legitimate interest / DPDP: consent (DPDP has no legitimate-interests ground) | Yes |
 | Location (if enabled) | [Location-based feature] | Consent | No |
-| Usage analytics | Improve app experience | Legitimate interest / DPDP Section 7 | Yes |
+| Usage analytics | Improve app experience | GDPR: legitimate interest / DPDP: consent | No |
 | Push notification token | Send you notifications | Consent | No |
 
 **Permissions we request:**

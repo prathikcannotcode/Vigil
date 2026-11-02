@@ -5,13 +5,16 @@
       "Glob(**)",
       "Grep(**)",
       "Bash(npm run validate)",
-      "Bash(npm run audit)"
+      "Bash(npm run validate -- --strict)",
+      "Bash(npm run audit)",
+      "Bash(npm run kpis)",
+      "Bash(npm test)"
     ]
   },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
@@ -22,7 +25,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",

@@ -4,7 +4,7 @@
 
 ---
 
-## [ORGANISATION NAME] — Health Data Privacy Notice
+## [ORGANISATION NAME]: Health Data Privacy Notice
 
 Your health data requires special protection. This notice explains how we collect and use it.
 
@@ -16,7 +16,7 @@ Your health data requires special protection. This notice explains how we collec
 
 | Data | Purpose | Legal basis |
 |---|---|---|
-| Medical history | [Treatment / Insurance / Research] | DPDP: Section 6 (explicit consent) / GDPR: Art. 9(2)(a) or (h) |
+| Medical history | [Treatment / Insurance / Research] | DPDP: Section 6 (consent) / GDPR: Art. 9(2)(a) or (h) |
 | Diagnostic results | [Treatment / Insurance] | DPDP: Section 6 / GDPR: Art. 9(2)(h) |
 | Prescription records | [Treatment / Pharmacy services] | DPDP: Section 6 / GDPR: Art. 9(2)(h) |
 | Biometric data (if applicable) | [Patient identification] | DPDP: Section 6 / GDPR: Art. 9(2)(a) |

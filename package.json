@@ -1,14 +1,23 @@
 {
   "name": "vigil",
-  "version": "0.1.0",
-  "description": "Open-source DPDP and GDPR compliance workspace agent — skills, workflows and schemas for Claude Code",
+  "version": "0.2.0",
+  "description": "Open-source DPDP and GDPR compliance workspace agent: 20 Claude Code skills, JSON Schemas and write-guard hooks",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prathikcannotcode/Vigil.git"
+  },
+  "homepage": "https://github.com/prathikcannotcode/Vigil#readme",
+  "bugs": "https://github.com/prathikcannotcode/Vigil/issues",
+  "keywords": ["dpdp", "gdpr", "privacy", "compliance", "claude-code", "data-protection", "india", "agent"],
   "scripts": {
     "validate": "node .claude/scripts/validate.mjs",
     "audit": "node .claude/scripts/validate.mjs --strict",
+    "test": "node --test .claude/scripts/tests/*.test.mjs",
     "kpis": "node .claude/scripts/kpis.mjs",
     "export:sarif": "node .claude/scripts/export-sarif.mjs",
     "export:oscal": "node .claude/scripts/export-oscal.mjs",
+    "export:ocsf": "node .claude/scripts/export-ocsf.mjs",
     "headless": "node .claude/scripts/run-headless.mjs"
   },
   "engines": {

@@ -1,0 +1,5 @@
+{"request_id":"RR-0001","recorded_at":"2026-10-02T10:00:00+05:30","event":"received","right":"access","framework":"GDPR","data_principal":"usr_7f3a","channel":"web form","due_at":"2026-11-02T10:00:00+05:30"}
+{"request_id":"RR-0001","recorded_at":"2026-10-03T09:30:00+05:30","event":"identity_verified","right":"access","framework":"GDPR","data_principal":"usr_7f3a"}
+{"request_id":"RR-0001","recorded_at":"2026-10-15T16:45:00+05:30","event":"fulfilled","right":"access","framework":"GDPR","data_principal":"usr_7f3a","notes":"Export delivered through the account dashboard."}
+{"request_id":"RR-0002","recorded_at":"2026-10-21T12:10:00+05:30","event":"received","right":"grievance","framework":"DPDP","data_principal":"usr_19c2","channel":"email","due_at":"2026-11-20T12:10:00+05:30"}
+{"request_id":"RR-0002","recorded_at":"2026-10-21T15:00:00+05:30","event":"acknowledged","right":"grievance","framework":"DPDP","data_principal":"usr_19c2"}

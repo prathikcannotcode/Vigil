@@ -4,7 +4,7 @@
 
 ---
 
-## [COMPANY NAME] — Data Collection Notice
+## [COMPANY NAME]: Data Collection Notice
 
 Before you complete your purchase, here is how we use your personal data.
 
@@ -14,7 +14,7 @@ Before you complete your purchase, here is how we use your personal data.
 
 | Data | Purpose | Legal basis |
 |---|---|---|
-| Name, email, phone | Process and deliver your order | DPDP: Section 7(a) (contract) / GDPR: Art. 6(1)(b) |
+| Name, email, phone | Process and deliver your order | DPDP: Section 7(a) (voluntarily provided for this purpose) / GDPR: Art. 6(1)(b) |
 | Shipping address | Deliver your order | DPDP: Section 7(a) / GDPR: Art. 6(1)(b) |
 | Payment details | Process payment (handled by [payment processor]) | DPDP: Section 7(a) / GDPR: Art. 6(1)(b) |
 | Order history | Customer support and returns | DPDP: Section 7(a) / GDPR: Art. 6(1)(b) |

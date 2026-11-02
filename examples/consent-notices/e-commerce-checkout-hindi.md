@@ -1,10 +1,10 @@
 # Consent Notice: E-Commerce Checkout (Hindi)
 
-**Framework:** DPDP Act 2023 (Section 5(2) — notice in scheduled languages)
+**Framework:** DPDP Act 2023 (Section 5(3): notice in Eighth Schedule languages)
 
 ---
 
-## [कंपनी का नाम] — डेटा संग्रहण सूचना
+## [कंपनी का नाम]: डेटा संग्रहण सूचना
 
 अपनी खरीदारी पूरी करने से पहले, जानिए हम आपके व्यक्तिगत डेटा का उपयोग कैसे करते हैं।
 
@@ -21,8 +21,8 @@
 | ईमेल (मार्केटिंग) | प्रचार ऑफर और अपडेट | धारा 6 (सहमति) |
 
 **हम किसके साथ साझा करते हैं:**
-- [भुगतान प्रोसेसर का नाम] — भुगतान प्रोसेसिंग के लिए
-- [लॉजिस्टिक्स पार्टनर का नाम] — डिलीवरी के लिए
+- [भुगतान प्रोसेसर का नाम]: भुगतान प्रोसेसिंग के लिए
+- [लॉजिस्टिक्स पार्टनर का नाम]: डिलीवरी के लिए
 - आपका डेटा किसी तीसरे पक्ष को बेचा नहीं जाता
 
 **हम कितने समय तक रखते हैं:**
@@ -45,7 +45,7 @@
 ---
 
 **अनुकूलन नोट:**
-- DPDP Section 5(2) requires notices in English and all 22 scheduled languages
+- DPDP Section 5(3) requires the option to read the notice in English or any of the 22 Eighth Schedule languages
 - This Hindi version should match the English version exactly in substance
 - Consider adding versions in other languages based on your user base
 - All [प्लेसहोल्डर] values must be replaced before use

@@ -4,23 +4,23 @@
  * Run a Vigil workflow headlessly via Claude Code or OpenCode.
  *
  * Usage:
- *   node .claude/scripts/run-headless.mjs --workflow full-audit --company acme-tech [--dry-run]
- *   node .claude/scripts/run-headless.mjs --workflow onboarding --company acme-tech
- *   node .claude/scripts/run-headless.mjs --workflow context-refresh --company acme-tech
- *   node .claude/scripts/run-headless.mjs --workflow remediation --company acme-tech
+ *   node .claude/scripts/run-headless.mjs --workflow audit --company acme-tech [--dry-run]
+ *   node .claude/scripts/run-headless.mjs --workflow onboard --company acme-tech
+ *   node .claude/scripts/run-headless.mjs --workflow refresh --company acme-tech
+ *   node .claude/scripts/run-headless.mjs --workflow remediate --company acme-tech
  *
  * Options:
- *   --workflow <name>       Workflow to run (full-audit, onboarding, remediation, context-refresh)
- *   --company <id>          Company profile ID
- *   --framework <name>      Limit to framework: dpdp, gdpr, or both (default: both)
+ *   --workflow <name>       audit, onboard, remediate or refresh
+ *   --company <id>          Company profile ID (lowercase letters, digits, hyphens)
+ *   --framework <name>      dpdp, gdpr, or both (default: both)
  *   --harness <name>        claude-code (default) or opencode
  *   --model <id>            Model override for opencode (e.g., provider/model)
  *   --dry-run               Print the prompt without executing
- *   --output <dir>          Output directory for session transcript (default: kpis/data/raw/sessions/)
+ *   --output <dir>          Output directory for session transcript (default: kpis/data/raw/sessions/<harness>)
  */
 
 import { execSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const args = process.argv.slice(2);
@@ -31,41 +31,43 @@ function flag(name) {
 }
 function hasFlag(name) { return args.includes(`--${name}`); }
 
+function die(message) {
+  console.error(message);
+  process.exit(1);
+}
+
 const workflow = flag('workflow');
 const company = flag('company');
 const framework = flag('framework') || 'both';
 const harness = flag('harness') || 'claude-code';
 const model = flag('model');
 const dryRun = hasFlag('dry-run');
-const outputDir = flag('output') || 'kpis/data/raw/sessions/claude-code';
+const outputDir = flag('output') || `kpis/data/raw/sessions/${harness}`;
 
+// Every value below ends up in a shell command, so each is checked against a strict shape.
 if (!workflow || !company) {
-  console.error('Usage: node .claude/scripts/run-headless.mjs --workflow <name> --company <id>');
-  console.error('');
-  console.error('Workflows: full-audit, onboarding, remediation, context-refresh');
-  process.exit(1);
+  die('Usage: node .claude/scripts/run-headless.mjs --workflow <name> --company <id>\n\nWorkflows: audit, onboard, remediate, refresh');
 }
+if (!/^[a-z0-9-]+$/.test(company)) die(`Invalid --company "${company}": use lowercase letters, digits and hyphens.`);
+if (!['dpdp', 'gdpr', 'both'].includes(framework)) die(`Invalid --framework "${framework}": use dpdp, gdpr or both.`);
+if (!['claude-code', 'opencode'].includes(harness)) die(`Invalid --harness "${harness}": use claude-code or opencode.`);
+if (model && !/^[\w.:/-]+$/.test(model)) die(`Invalid --model "${model}".`);
+
+const scopeOf = fw => (fw === 'both' ? 'DPDP and GDPR' : fw.toUpperCase());
+const NO_QUESTIONS = 'This is a headless run: do not ask questions. Where information is missing, record it as not assessed and list the open questions in your final message.';
 
 const WORKFLOWS = {
-  'full-audit': (co, fw) => {
-    const scope = fw === 'both' ? 'DPDP and GDPR' : fw.toUpperCase();
-    return `Run a full privacy audit on ${co} covering ${scope}. Use the full-audit workflow. Save findings to assessments/ and update the posture dashboard.`;
-  },
-  'onboarding': (co) =>
-    `Onboard the company ${co}. Use the onboarding workflow. Ask me any questions needed to set up the company profile.`,
-  'remediation': (co) =>
-    `Generate a remediation plan for ${co} based on the latest audit findings. Use the remediation workflow. Prioritise by penalty exposure.`,
-  'context-refresh': (co, fw) => {
-    const scope = fw === 'both' ? 'DPDP and GDPR' : fw.toUpperCase();
-    return `Refresh the compliance context for ${co} covering ${scope}. Use the context-refresh workflow. Check for regulatory updates, re-scan for PII, and update the posture dashboard.`;
-  },
+  audit: (co, fw) =>
+    `Run a full privacy audit on ${co} covering ${scopeOf(fw)}. Use the /audit skill. Save findings to assessments/ and update the posture dashboard. ${NO_QUESTIONS}`,
+  onboard: co =>
+    `Onboard the company ${co}. Use the /onboard skill. ${NO_QUESTIONS}`,
+  remediate: co =>
+    `Generate a remediation plan for ${co} based on the latest audit findings. Use the /remediate skill. Prioritise by penalty exposure. ${NO_QUESTIONS}`,
+  refresh: (co, fw) =>
+    `Refresh the compliance context for ${co} covering ${scopeOf(fw)}. Use the /refresh skill. Check for regulatory updates, re-scan for PII, and update the posture dashboard. ${NO_QUESTIONS}`,
 };
 
-if (!WORKFLOWS[workflow]) {
-  console.error(`Unknown workflow: ${workflow}`);
-  console.error(`Available: ${Object.keys(WORKFLOWS).join(', ')}`);
-  process.exit(1);
-}
+if (!WORKFLOWS[workflow]) die(`Unknown workflow: ${workflow}\nAvailable: ${Object.keys(WORKFLOWS).join(', ')}`);
 
 const prompt = WORKFLOWS[workflow](company, framework);
 
@@ -81,16 +83,13 @@ if (dryRun) {
 
 mkdirSync(outputDir, { recursive: true });
 
-const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-const sessionFile = join(outputDir, `${workflow}_${company}_${timestamp}.json`);
+const startedAt = new Date();
+const sessionFile = join(outputDir, `${workflow}_${company}_${startedAt.toISOString().replace(/[:.]/g, '-')}.json`);
 
-let cmd;
-if (harness === 'opencode') {
-  cmd = `opencode --prompt "${prompt.replace(/"/g, '\\"')}"`;
-  if (model) cmd += ` --model ${model}`;
-} else {
-  cmd = `claude --print --output-format json "${prompt.replace(/"/g, '\\"')}"`;
-}
+// acceptEdits lets the run write its reports; the write-guard hook still limits where.
+const cmd = harness === 'opencode'
+  ? `opencode run "${prompt}"${model ? ` --model ${model}` : ''}`
+  : `claude --print --output-format json --permission-mode acceptEdits "${prompt}"`;
 
 console.log(`Running ${workflow} for ${company} (${framework})...`);
 console.log(`Harness: ${harness}`);
@@ -102,7 +101,7 @@ try {
     cwd: process.cwd(),
     encoding: 'utf8',
     stdio: ['pipe', 'pipe', 'inherit'],
-    timeout: 600_000,
+    timeout: 1_800_000,
   });
 
   const session = {
@@ -111,15 +110,14 @@ try {
     framework,
     harness,
     model: model || null,
-    started_at: new Date(Date.now() - 600_000).toISOString(),
+    started_at: startedAt.toISOString(),
     completed_at: new Date().toISOString(),
     output,
   };
 
   writeFileSync(sessionFile, JSON.stringify(session, null, 2));
   console.log(`Session saved to ${sessionFile}`);
-  console.log('Run npm run kpis to compute metrics from this session.');
+  console.log('Run npm run validate, then npm run kpis to compute metrics from this session.');
 } catch (e) {
-  console.error(`Workflow failed: ${e.message}`);
-  process.exit(1);
+  die(`Workflow failed: ${e.message}`);
 }

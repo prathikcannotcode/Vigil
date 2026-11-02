@@ -1,50 +1,50 @@
 #!/usr/bin/env node
 
 /**
- * Validates workspace JSON files against their schemas.
+ * Validates workspace JSON/JSONL files against their schemas and checks that
+ * every skill has the SKILL.md frontmatter Claude Code needs to discover it.
+ *
  * Run: npm run validate
+ *      npm run validate -- --strict   (also fails on data files outside the layout)
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, extname } from 'node:path';
+import { listFiles, loadLayout, matchRule, checkFile } from './lib.mjs';
 
 const root = process.cwd();
 const strict = process.argv.includes('--strict');
+const layout = loadLayout(root);
 let errors = 0;
 let checked = 0;
 
-function walkJson(dir) {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) {
-      if (entry === 'node_modules' || entry === '.git') continue;
-      walkJson(full);
-    } else if (extname(full) === '.json') {
-      checked++;
-      try {
-        JSON.parse(readFileSync(full, 'utf8'));
-      } catch (e) {
-        console.error(`INVALID JSON: ${full}\n  ${e.message}`);
-        errors++;
-      }
-    } else if (extname(full) === '.jsonl') {
-      checked++;
-      const lines = readFileSync(full, 'utf8').split('\n').filter(Boolean);
-      for (let i = 0; i < lines.length; i++) {
-        try {
-          JSON.parse(lines[i]);
-        } catch (e) {
-          console.error(`INVALID JSONL: ${full} line ${i + 1}\n  ${e.message}`);
-          errors++;
-        }
-      }
-    }
-  }
+function fail(message) {
+  console.error(message);
+  errors++;
 }
 
-walkJson(root);
+for (const rel of listFiles(root)) {
+  const ext = extname(rel);
+  if (strict && /^(company-profile|assessments)\//.test(rel) && !matchRule(layout, rel)) {
+    fail(`OUTSIDE LAYOUT: ${rel}`);
+  }
+  if (ext !== '.json' && ext !== '.jsonl') continue;
+  checked++;
+  for (const e of checkFile(rel, root, layout)) fail(`INVALID: ${rel}\n  ${e}`);
+}
 
-console.log(`Checked ${checked} files, ${errors} error(s).`);
+const skillsDir = join(root, '.claude/skills');
+let skills = 0;
+for (const name of existsSync(skillsDir) ? readdirSync(skillsDir) : []) {
+  const file = join(skillsDir, name, 'SKILL.md');
+  if (!existsSync(file)) { fail(`SKILL: .claude/skills/${name} has no SKILL.md`); continue; }
+  skills++;
+  const front = readFileSync(file, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+  if (!new RegExp(`^name: ${name}\\s*$`, 'm').test(front)) fail(`SKILL: ${name}/SKILL.md frontmatter needs "name: ${name}"`);
+  if (!/^description: \S/m.test(front)) fail(`SKILL: ${name}/SKILL.md frontmatter needs a description`);
+}
+
+console.log(`Checked ${checked} data files and ${skills} skills, ${errors} error(s).`);
 if (errors > 0) process.exit(1);
 if (strict && checked === 0) {
   console.error('No JSON files found in workspace.');

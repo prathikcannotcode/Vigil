@@ -4,7 +4,7 @@
 
 ---
 
-## [APP/SERVICE NAME] — Parent/Guardian Consent Form
+## [APP/SERVICE NAME]: Parent/Guardian Consent Form
 
 Your child wants to use [App/Service Name]. Because they are under [18 (DPDP) / 16 (GDPR, varies by Member State)], we need your consent before collecting their data.
 
@@ -28,7 +28,7 @@ Your child wants to use [App/Service Name]. Because they are under [18 (DPDP) / 
 - No targeted advertising directed at children (DPDP Section 9(3))
 - No collection of precise location data
 - No sharing of children's data with third-party advertisers
-- No processing detrimental to the child's well-being (DPDP Section 9(4))
+- No processing detrimental to the child's well-being (DPDP Section 9(2))
 
 **Who has access:**
 - [Company Name] staff necessary for service operation
@@ -67,5 +67,5 @@ Date: _______________
 - DPDP age threshold: 18 (Section 9)
 - GDPR age threshold: varies by Member State (13-16, default 16 under Art. 8)
 - Verification method must be proportionate to risk and type of data
-- For DPDP: government may exempt certain categories (educational, healthcare) from parental consent requirement (Section 9(5))
+- For DPDP: listed classes such as clinical establishments, educational institutions and child-care providers are exempt for specified purposes (Section 9(4), Rule 12, Fourth Schedule)
 - Consider age-appropriate design principles

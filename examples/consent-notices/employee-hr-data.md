@@ -4,7 +4,7 @@
 
 ---
 
-## [COMPANY NAME] — Employee Privacy Notice
+## [COMPANY NAME]: Employee Privacy Notice
 
 This notice explains how we collect and use your personal data as an employee.
 
@@ -16,11 +16,11 @@ This notice explains how we collect and use your personal data as an employee.
 
 | Data | Purpose | Legal basis |
 |---|---|---|
-| Name, address, phone, email, emergency contact | Employment administration | DPDP: Section 7(b) (employment) / GDPR: Art. 6(1)(b) (contract) |
-| Government ID (Aadhaar, PAN / National Insurance) | Statutory compliance, tax, benefits | DPDP: Section 7(c) (legal obligation) / GDPR: Art. 6(1)(c) |
-| Bank account details | Salary payment | DPDP: Section 7(b) / GDPR: Art. 6(1)(b) |
-| Performance records | Appraisal and career development | DPDP: Section 7(b) / GDPR: Art. 6(1)(f) (legitimate interest) |
-| Attendance, leave records | Workforce management | DPDP: Section 7(b) / GDPR: Art. 6(1)(b) |
+| Name, address, phone, email, emergency contact | Employment administration | DPDP: Section 7(i) (employment) / GDPR: Art. 6(1)(b) (contract) |
+| Government ID (Aadhaar, PAN / National Insurance) | Statutory compliance, tax, benefits | DPDP: Section 7(i) (employment, incl. statutory filings) / GDPR: Art. 6(1)(c) |
+| Bank account details | Salary payment | DPDP: Section 7(i) / GDPR: Art. 6(1)(b) |
+| Performance records | Appraisal and career development | DPDP: Section 7(i) / GDPR: Art. 6(1)(f) (legitimate interest) |
+| Attendance, leave records | Workforce management | DPDP: Section 7(i) / GDPR: Art. 6(1)(b) |
 | Health information (if provided) | Insurance, workplace safety | DPDP: consent / GDPR: Art. 9(2)(b) (employment obligation) |
 | Background check results | Pre-employment verification | DPDP: consent / GDPR: Art. 6(1)(f) |
 | CCTV footage (office premises) | Security | DPDP: Section 7(i) / GDPR: Art. 6(1)(f) |
