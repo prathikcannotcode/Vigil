@@ -85,6 +85,25 @@ Pending: in January 2026 MeitY consulted on compressing the 18-month phase to 12
 | 22 | Appeal to the Appellate Tribunal | 13 May 2027 |
 | 23 | Calling for information (Seventh Schedule) | 13 May 2027 |
 
+### Rule 3 and Rule 6 sub-clauses
+
+| Clause | Requires |
+|---|---|
+| Rule 3(a) | Notice presented and understandable independently of any other information |
+| Rule 3(b) | Clear and plain language: itemised description of the data (i); specified purpose and the goods, services or uses it enables (ii) |
+| Rule 3(c) | Link and other means to withdraw consent with comparable ease (i), exercise rights (ii), complain to the Board (iii) |
+| Rule 6(1)(a) | Data security measures: encryption, obfuscation, masking, virtual tokens |
+| Rule 6(1)(b) | Control of access to computer resources |
+| Rule 6(1)(c) | Visibility on access to personal data: logs, monitoring and review, to detect unauthorised access |
+| Rule 6(1)(d) | Continued processing after a compromise, such as backups |
+| Rule 6(1)(e) | Keep those logs and personal data for one year, unless another law requires otherwise |
+| Rule 6(1)(f) | Security safeguards provision in the Data Processor contract |
+| Rule 6(1)(g) | Technical and organisational measures to make the safeguards effective |
+
+Personal data sitting in an application log is a masking gap under 6(1)(a). A missing access log is a gap under 6(1)(c). Bundled consent can breach 3(a) (not independent of the terms) and 3(b) (no specific purpose).
+
+Sub-clause letters were checked on 5 November 2026 against a reproduction of the notified text at dpdpa.com, because MeitY's PDF refused the fetch. Confirm them against the Gazette before relying on them in a filing.
+
 ### Related Indian instruments
 
 | Instrument | Issuer | Relevance |
@@ -94,6 +113,7 @@ Pending: in January 2026 MeitY consulted on compressing the 18-month phase to 12
 | CERT-In Directions, 28 Apr 2022 (s.70B(6)) | CERT-In | Report cyber incidents within 6 hours; keep ICT logs for 180 days in India |
 | RBI Cybersecurity, Technology: Risk, Resilience and Assurance Framework Directions, 2026 (31 Jul 2026) | RBI | Entity-specific directions for banks and NBFCs; replace the 2016 framework and the 2023 IT Governance Master Direction; 6-hour incident reporting to RBI |
 | RBI Storage of Payment System Data circular (6 Apr 2018) | RBI | Payment data stored only in India |
+| Reserve Bank of India (Digital Lending) Directions, 2025 (RBI/2025-26/36, 8 May 2025) | RBI | Banks, co-operative banks, NBFCs and all-India financial institutions, and through them their lending service providers. Need-based data collection with prior explicit consent and an audit trail (para 12). Service providers keep only basic data; all data on servers in India, with data processed abroad back within 24 hours (para 13). Public privacy policy naming third parties (para 14). Paragraph numbers are from the May 2025 text, so check RBI's current Master Directions before citing one |
 | SEBI Cybersecurity and Cyber Resilience Framework (CSCRF), Aug 2024 | SEBI | Market intermediaries |
 | IRDAI Information and Cyber Security Guidelines, 2023 | IRDAI | Insurers and intermediaries |
 | Guidelines for Prevention and Regulation of Dark Patterns, 2023 | Central Consumer Protection Authority | 13 listed dark patterns in consumer-facing interfaces (Consumer Protection Act 2019) |

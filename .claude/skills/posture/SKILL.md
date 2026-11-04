@@ -69,7 +69,9 @@ For organisations subject to both DPDP and GDPR, show each dimension's status pe
 | Retention | grey | amber | DPDP retention not assessed |
 ```
 
-Output: posture snapshot saved to `company-profile/{id}/posture.json`.
+Before 13 May 2027, `dpdp_status` reads as readiness for most obligations: `non_compliant` means not ready, not in breach. The schema has no separate value, so say so in `notes`.
+
+Output: posture snapshot saved to `company-profile/{id}/posture.json`. During an `/audit`, write the same snapshot to `assessments/{assessment_id}/posture.json`.
 
 ## Commands
 

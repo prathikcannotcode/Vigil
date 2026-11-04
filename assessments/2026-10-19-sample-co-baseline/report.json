@@ -100,7 +100,7 @@
       "id": "F-0008",
       "severity": "medium",
       "framework": "DPDP",
-      "clause": "s.8(5), Rule 6(1)(c)",
+      "clause": "s.8(5), Rule 6(1)(a)",
       "cross_reference": "GDPR Art. 32(1)(b)",
       "issue": "SMS service logs full mobile numbers at INFO level.",
       "recommendation": "Mask to the last four digits before logging.",

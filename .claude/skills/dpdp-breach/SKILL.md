@@ -95,6 +95,20 @@ DPDP has no public-notice substitute for individual intimation (that is a GDPR A
 
 Output: post-incident report with findings and corrective actions, and a `reviewed` line in the breach log.
 
+### 7. Readiness check
+
+For `/audit` or a drill, with no live incident. Compare the runbook with the steps below and raise a finding for each one missing. Write nothing to the breach log.
+
+| Step the runbook needs | Clause | Applies |
+|---|---|---|
+| Personal data assessment, recording `aware_at` | s.8(6), Rule 7 | 13 May 2027 |
+| CERT-In within 6 hours | CERT-In Directions 2022 | Today |
+| RBI within 6 hours, if a regulated entity | RBI Cybersecurity Directions 2026 | Today |
+| Board without delay, then the detailed report within 72 hours | Rule 7(2) | 13 May 2027 |
+| Each affected Data Principal without delay | Rule 7(1) | 13 May 2027 |
+| EU or UK supervisory authority within 72 hours, and affected people if the risk is high | GDPR Art. 33(1), 34(1) | Today |
+| Logs kept for one year, and ICT logs for 180 days in India | Rule 6(1)(e); CERT-In Directions 2022 | 13 May 2027; today |
+
 ## Guardrails
 
 - Never apply a materiality threshold to DPDP intimation. Every breach is intimated.
@@ -114,3 +128,4 @@ Invoke the skill directly, or describe the task in plain English and Claude pick
 | `/dpdp-breach notify-board` | Prepare the Board intimation and 72-hour report |
 | `/dpdp-breach notify-principals` | Prepare the Data Principal intimation |
 | `/dpdp-breach review` | Conduct post-incident review |
+| `/dpdp-breach readiness` | Check a runbook against the required steps, with no live incident |
