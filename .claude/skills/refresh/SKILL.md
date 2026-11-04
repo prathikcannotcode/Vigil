@@ -1,6 +1,6 @@
 ---
 name: refresh
-description: Periodic re-assessment: regulatory changes, PII re-scan, data map and consent drift, and a before/after posture comparison. Use for "refresh context", "what changed", "re-assess", "quarterly review".
+description: "Periodic re-assessment: regulatory changes, PII re-scan, data map and consent drift, and a before/after posture comparison. Use for \"refresh context\", \"what changed\", \"re-assess\", \"quarterly review\"."
 ---
 
 # Context Refresh Workflow

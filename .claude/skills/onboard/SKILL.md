@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: Onboard an organisation into Vigil: gather details, write the company profile, detect which frameworks apply, take a first posture snapshot and recommend next steps. Use for "add my company", "set up company profile", "onboard".
+description: "Onboard an organisation into Vigil: gather details, write the company profile, detect which frameworks apply, take a first posture snapshot and recommend next steps. Use for \"add my company\", \"set up company profile\", \"onboard\"."
 ---
 
 # Organisation Onboarding Workflow
@@ -21,7 +21,7 @@ Ask for:
 1. Organisation name and legal name
 2. Registered address and jurisdiction(s)
 3. Industry sector (fintech, healthtech, edtech, SaaS, e-commerce, other)
-4. Approximate number of users/customers
+4. Approximate number of users/customers, and worldwide annual turnover in euros if known (for the GDPR Art. 83 percentage caps)
 5. Does it process data of individuals in India? (DPDP applicability)
 6. Does it process data of individuals in the EU/UK? (GDPR applicability)
 7. Is it designated as a Significant Data Fiduciary? (or likely to be)
@@ -35,6 +35,9 @@ Write `company-profile/{company_id}/details.json`:
 {
   "id": "<slug>",
   "legal_name": "",
+  "registered_address": "",
+  "approx_users": 0,
+  "annual_turnover_eur": 0,
   "jurisdiction": [],
   "sector": "",
   "frameworks": ["DPDP", "GDPR"],

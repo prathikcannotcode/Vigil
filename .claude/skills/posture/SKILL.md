@@ -1,6 +1,6 @@
 ---
 name: posture
-description: Unified DPDP and GDPR compliance posture across six dimensions, saved as a posture snapshot. Use for "compliance posture", "how compliant are we", "privacy health check", "gaps".
+description: "Unified DPDP and GDPR compliance posture across six dimensions, saved as a posture snapshot. Use for \"compliance posture\", \"how compliant are we\", \"privacy health check\", \"gaps\"."
 ---
 
 # Privacy Compliance Posture Dashboard

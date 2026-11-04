@@ -1,6 +1,6 @@
 ---
 name: dpdp-dpia
-description: Data Protection Impact Assessments under DPDP s.10(2)(c) and Rule 13: screen, assess, mitigate, record residual risk and review annually. Use for "DPIA", "privacy impact assessment", "high-risk processing", "SDF assessment".
+description: "Data Protection Impact Assessments under DPDP s.10(2)(c) and Rule 13: screen, assess, mitigate, record residual risk and review annually. Use for \"DPIA\", \"privacy impact assessment\", \"high-risk processing\", \"SDF assessment\"."
 ---
 
 # DPDP Data Protection Impact Assessment

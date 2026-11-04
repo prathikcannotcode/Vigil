@@ -1,6 +1,6 @@
 ---
 name: dpdp-catalog
-description: Reference registry for the DPDP Act 2023, DPDP Rules 2025 and related Indian instruments: section and rule map, phased commencement dates, penalty Schedule, sector regulators. Use to cite the right clause, check what is in force, or decide applicability.
+description: "Reference registry for the DPDP Act 2023, DPDP Rules 2025 and related Indian instruments: section and rule map, phased commencement dates, penalty Schedule, sector regulators. Use to cite the right clause, check what is in force, or decide applicability."
 ---
 
 # DPDP Regulatory Catalog

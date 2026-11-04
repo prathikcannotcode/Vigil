@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Run a full DPDP and GDPR privacy audit: PII discovery, data flows, consent, rights, DPIA, breach readiness, code and document review, then a posture snapshot and a schema-valid report. Use for "full audit", "privacy audit", "audit my app".
+description: "Run a full DPDP and GDPR privacy audit: PII discovery, data flows, consent, rights, DPIA, breach readiness, code and document review, then a posture snapshot and a schema-valid report. Use for \"full audit\", \"privacy audit\", \"audit my app\"."
 ---
 
 # Full Privacy Audit Workflow
@@ -44,13 +44,13 @@ Run a complete privacy compliance audit covering both DPDP and GDPR. Orchestrate
 - Number findings `F-0001` upwards within the report.
 - Every finding cites a clause, and a `cross_reference` when the same gap breaches the other framework.
 - Set `found_at`. Leave `owner` and `due_date` for `/remediate` unless the user gave them.
-- Reference code by `file` and `line`. Never copy personal data into a finding.
-- Count applicable and examined controls (sections, rules, articles) and record them in `coverage`.
+- Reference code by `file` and `line`. `file` is relative to the root of the audited codebase, never absolute, so SARIF maps onto that repository. Leave it out for a gap with no file, such as a missing contract. Never copy personal data into a finding.
+- Count applicable and examined controls (sections, rules, articles), record them in `coverage`, and say in `summary.md` how you counted. The denominator is your own count, so do not present it as comparable across runs.
 
 ## Output
 
 Assessment report saved to `assessments/{assessment_id}/` (use `YYYY-MM-DD-{company_id}-{scope}` as the id):
-- `report.json`: `assessment_id`, `company_id`, `scope`, `started_at`, `completed_at`, `coverage` and `findings`, per `.claude/schemas/report.schema.json`
+- `report.json`: `assessment_id`, `company_id`, `scope`, `started_at`, `completed_at`, `coverage` and `findings`, per `.claude/schemas/report.schema.json`. Also record `target` (repo and commit audited), `model`, `vigil_version` and `law_as_at` (the catalogs' "Last verified" date) so someone can check the run later
 - `posture.json`: compliance posture snapshot
 - `data-map.json`: personal data inventory
 - `summary.md`: human-readable executive summary

@@ -1,72 +1,66 @@
 ---
 name: export
-description: Export findings as SARIF 2.1.0 (GitHub code scanning), OSCAL Assessment Results or OCSF Compliance Finding events. Use for "export SARIF", "OSCAL", "send findings to SIEM".
+description: "Export findings as SARIF 2.1.0 (GitHub code scanning), OSCAL Assessment Results or OCSF Compliance Finding events. Use for \"export SARIF\", \"OSCAL\", \"send findings to SIEM\"."
 ---
 
 # Output Format Conversion (OSCAL, SARIF, OCSF)
 
 ## Trigger
 
-"export OSCAL", "export SARIF", "convert findings", "OSCAL output", "SARIF output", "OCSF output", "standard format", "interop with Maxwell"
+"export OSCAL", "export SARIF", "convert findings", "OSCAL output", "SARIF output", "OCSF output", "standard format"
 
 ## Purpose
 
-Convert Vigil findings and posture data into open standard formats for interoperability with other compliance tools, SIEMs, and reporting systems.
+Convert Vigil findings and posture data into open standard formats for interoperability with other compliance tools, SIEMs, and reporting systems. Run the matching script; do not write these files by hand. Each export uses the company's latest report only.
 
 ## Supported formats
 
 ### SARIF 2.1.0 (Static Analysis Results Interchange Format)
 
-For code-related findings (PII in code, missing encryption, dark patterns in UI).
+`npm run export:sarif -- --company <id> --output findings.sarif`
+
+For code-related findings (PII in code, missing encryption, dark patterns in UI). Findings with no `file` and findings that are `remediated` or `accepted` are left out, because code scanning has nowhere to display them or would show them as live alerts. The script names what it left out; tell the user.
 
 Maps to:
 - `result.ruleId` -> finding clause (e.g., "GDPR-Art-32-1-a")
 - `result.level` -> severity (critical/high -> error, medium -> warning, low -> note)
-- `result.message.text` -> finding issue description
+- `result.message.text` -> finding issue and recommendation
 - `result.locations[].physicalLocation` -> file path and line number
-- `result.fixes[].description` -> finding recommendation
 - `run.tool.driver.rules[]` -> regulatory clauses as rule definitions
 
 Use case: import into GitHub Code Scanning, VS Code SARIF Viewer, or any SARIF-compatible tool.
 
-### OSCAL (Open Security Controls Assessment Language)
+### OSCAL 1.1.2 (Open Security Controls Assessment Language)
 
-For control assessments and compliance posture.
+`npm run export:oscal -- --company <id> --output results.oscal.json`
+
+For control assessments and compliance posture. All findings, as an Assessment Results document.
 
 Maps to:
-- Assessment Results model:
-  - `result.findings[]` -> findings with regulatory clause references
-  - `result.observations[]` -> evidence from PII scans and data flow reviews
-  - `control-selection` -> applicable DPDP sections and GDPR articles
-- Component Definition model:
-  - Organisation as a system component
-  - Framework controls as implemented requirements
+- `result.findings[]` -> findings, with the clause as a `target-id` token and a `clause` prop
+- `result.observations[]` -> file evidence for findings that have a `file`
+- `reviewed-controls` -> include-all, because Vigil has no OSCAL control catalog
 
-Use case: import into GovReady, Compliance-as-Code pipelines, or Maxwell's control ledger.
+Use case: import into GovReady or Compliance-as-Code pipelines.
 
-### OCSF 1.9 (Open Cybersecurity Schema Framework)
+### OCSF 1.3.0 (Open Cybersecurity Schema Framework)
 
-For runtime and breach findings.
+`npm run export:ocsf -- --company <id> --output findings.ocsf.jsonl`
+
+For security operations. All findings, one event per line.
 
 Maps to:
 - Compliance Finding (class 2003):
   - `finding_info.title` -> finding issue
-  - `finding_info.uid` -> finding ID
+  - `finding_info.uid` -> assessment and finding ID
   - `compliance.requirements[]` -> regulatory clauses
   - `severity_id` -> severity level
+  - `status_id` -> open 1 (New), in progress or disputed 2 (In Progress), accepted 3 (Suppressed), remediated 4 (Resolved)
   - `remediation.desc` -> recommendation
 
 Use case: feed into SIEM/SOAR systems, integrate with security operations.
 
-## Conversion rules
-
-### Finding ID mapping
-
-Vigil finding IDs (`F-0001`) map to framework-specific rule IDs:
-- DPDP: `DPDP-S{section}` (e.g., `DPDP-S8-5` for Section 8(5))
-- GDPR: `GDPR-Art-{article}` (e.g., `GDPR-Art-32-1-a`)
-
-### Severity mapping
+## Severity mapping
 
 | Vigil | SARIF level | OCSF severity_id |
 |---|---|---|
@@ -74,26 +68,6 @@ Vigil finding IDs (`F-0001`) map to framework-specific rule IDs:
 | high | error | 4 (High) |
 | medium | warning | 3 (Medium) |
 | low | note | 2 (Low) |
-
-### Framework mapping
-
-| Vigil framework | OSCAL catalog |
-|---|---|
-| DPDP | Custom catalog: DPDP Act 2023 |
-| GDPR | Custom catalog: EU GDPR 2016/679 |
-| UK-GDPR | Custom catalog: UK GDPR + DUAA 2025 |
-
-## Maxwell interop
-
-To feed findings into a Maxwell workspace:
-1. Export as OSCAL Assessment Results
-2. Copy to Maxwell's `company-profile/{id}/soc/` directory
-3. Maxwell's ledger protocol ingests the OSCAL findings
-
-To import Maxwell findings:
-1. Read Maxwell's SARIF output from its assessment
-2. Convert SARIF rule IDs to Vigil finding format
-3. Import as findings with `framework` set based on the rule prefix
 
 ## Commands
 
@@ -103,6 +77,5 @@ Invoke the skill directly, or describe the task in plain English and Claude pick
 |---|---|
 | `/export sarif` | Export code findings as SARIF 2.1.0 |
 | `/export oscal` | Export posture and findings as OSCAL |
-| `/export ocsf` | Export breach/runtime findings as OCSF |
+| `/export ocsf` | Export findings as OCSF |
 | `/export all` | Export all formats |
-| `/export import-sarif` | Import findings from a SARIF file |

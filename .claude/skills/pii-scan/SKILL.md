@@ -1,6 +1,6 @@
 ---
 name: pii-scan
-description: Scan codebases, schemas, logs and configs for personal data (DPDP s.2(t), GDPR Art. 4(1) and 9) including Aadhaar, PAN and UPI IDs, reporting locations only, never values. Use for "scan for PII", "find personal data", "data discovery".
+description: "Scan codebases, schemas, logs and configs for personal data (DPDP s.2(t), GDPR Art. 4(1) and 9) including Aadhaar, PAN and UPI IDs, reporting locations only, never values. Use for \"scan for PII\", \"find personal data\", \"data discovery\"."
 ---
 
 # PII Scanner

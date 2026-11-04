@@ -4,10 +4,31 @@
  */
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
-import { join, extname, relative } from 'node:path';
+import { join, extname, relative, resolve, dirname } from 'node:path';
 
 const SCHEMA_DIR = '.claude/schemas';
 const SKIP_DIRS = new Set(['.git', 'node_modules']);
+
+/** The nearest directory at or above `start` holding a workspace layout, so hooks survive a `cd` and worktrees. */
+export function workspaceRoot(start = process.cwd()) {
+  for (let dir = resolve(start); ; dir = dirname(dir)) {
+    if (existsSync(join(dir, SCHEMA_DIR, 'layout.json'))) return dir;
+    if (dirname(dir) === dir) return undefined;
+  }
+}
+
+/** Problems with a SKILL.md frontmatter. A bare `: ` or ` #` in a value is not valid YAML. */
+export function frontmatterErrors(text, name) {
+  const front = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+  const errors = [];
+  if (!new RegExp(`^name: ${name}\\s*$`, 'm').test(front)) errors.push(`frontmatter needs "name: ${name}"`);
+  const description = front.match(/^description: (.+?)\s*$/m)?.[1];
+  if (!description) errors.push('frontmatter needs a description');
+  else if (description.startsWith('"') ? !/^"(?:[^"\\]|\\.)*"$/.test(description) : /: | #/.test(description)) {
+    errors.push('description is not valid YAML: wrap it in double quotes and escape inner quotes');
+  }
+  return errors;
+}
 
 export function loadLayout(root = process.cwd()) {
   const layout = JSON.parse(readFileSync(join(root, SCHEMA_DIR, 'layout.json'), 'utf8'));
@@ -142,11 +163,24 @@ export function checkFile(relPath, root = process.cwd(), layout = loadLayout(roo
 // ---------------------------------------------------------------------------
 // Findings
 
-/** Findings from every assessments/<id>/report.json, optionally for one company. */
+/** Findings from each company's latest report, so a re-audit replaces the last one instead of adding to it. */
 export function loadFindings(company, root = process.cwd()) {
-  return loadReports(root)
+  return latestReports(root)
     .filter(r => !company || r.company_id === company)
     .flatMap(r => (r.findings ?? []).map(f => ({ ...f, company_id: r.company_id, assessment_id: r.assessment_id })));
+}
+
+export function latestReports(root = process.cwd()) {
+  const latest = new Map();
+  for (const r of loadReports(root).sort((a, b) => Date.parse(a.started_at) - Date.parse(b.started_at))) latest.set(r.company_id, r);
+  return [...latest.values()];
+}
+
+/** Exits with a message when a company has no report, so a typo is not mistaken for a clean audit. */
+export function requireReport(company, root = process.cwd()) {
+  if (loadReports(root).some(r => r.company_id === company)) return;
+  console.error(`No report found for company "${company}" under assessments/. Run /audit first, or check the id.`);
+  process.exit(1);
 }
 
 export function loadReports(root = process.cwd()) {

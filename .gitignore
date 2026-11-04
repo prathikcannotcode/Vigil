@@ -1,6 +1,15 @@
 node_modules/
 .env
 *.local
+.claude/settings.local.json
+# Real organisations stay out of git; a `git add .` in a public fork would publish their gaps. Only the synthetic demo is tracked.
+company-profile/*
+!company-profile/.gitkeep
+!company-profile/sample-co/
+assessments/*
+!assessments/2026-10-19-sample-co-baseline/
+!assessments/templates/
+# After the rules above, so the re-included demo folders are covered too.
 company-profile/*/credentials.json
 assessments/**/raw/
 kpis/metrics.json

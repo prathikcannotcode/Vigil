@@ -41,11 +41,13 @@ It won't tell you you're compliant. It will tell you which line of which file sa
 
 <img src="docs/assets/terminal.png" alt="Illustrative /audit run on the synthetic sample-co workspace: one critical finding (Aadhaar numbers stored in plaintext, DPDP s.8(5), Rule 6(1)(a)) and three high findings, a DPDP and GDPR posture grid across six dimensions, maximum theoretical exposure of ₹650 crore under DPDP and €90M under GDPR, and the three files written." width="100%">
 
-That run is on **sample-co**, a synthetic lending app that ships with the repo, so you can see real output before pointing Vigil at anything of yours:
+That picture is **sample-co**, a made-up lending app. Its files were written by hand to show the format, and no code ships for it, so `/audit sample-co` has nothing to scan:
 
 - [`summary.md`](assessments/2026-10-19-sample-co-baseline/summary.md): the human-readable audit, with posture, findings, penalty arithmetic and a fix-first list
 - [`report.json`](assessments/2026-10-19-sample-co-baseline/report.json): 9 schema-valid findings with owners, due dates and cross-references between DPDP and GDPR
 - [`breach-log.jsonl`](company-profile/sample-co/breach-log.jsonl): an incident from detection to CERT-In (5h 25m) and the EU authority (44h 10m), one append-only line per step
+
+To watch a real run, audit [`examples/acme-demo`](examples/acme-demo), a small synthetic app with planted problems, and score the result against [the list of what it should find](examples/acme-demo.expected.json). Quick start step 5 shows how. That list is also the place to start if you want to measure Vigil's accuracy; no benchmark results are published yet.
 
 ## Why Vigil
 
@@ -74,12 +76,15 @@ You need [Node.js 22+](https://nodejs.org) and [Claude Code](https://claude.com/
    ```
 3. **Look at the demo.** Type `/posture sample-co` or ask *"What's sample-co's penalty exposure?"*
 4. **Add your organisation.** Type `/onboard` or say *"Add my company acme-tech, a SaaS company processing data in India and the EU."*
-5. **Audit a codebase.** Add the codebase to the session (`/add-dir ../your-app`), then run `/audit`. Findings land in `assessments/`.
+5. **Audit a codebase.** Add the codebase to the session (`/add-dir ../your-app`), then run `/audit`. Findings land in `assessments/`. To try it on the synthetic app first, copy it out of the repo so the run can't read the answer list, then add it the same way:
+   ```bash
+   cp -r examples/acme-demo ../acme-demo
+   ```
 6. **Send findings where your team already looks.**
    ```bash
    npm run export:sarif -- --company acme-tech --output findings.sarif
    ```
-   Upload `findings.sarif` with [`github/codeql-action/upload-sarif`](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github) and the findings appear in the Security tab next to your code.
+   Upload `findings.sarif` with [`github/codeql-action/upload-sarif`](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github) and findings with a file and line should appear in the Security tab next to your code. Findings with no file, such as a missing contract, and closed findings are left out of SARIF. The exporter names them, and they stay in `report.json`, OSCAL and OCSF.
 
 Delete `company-profile/sample-co/` and `assessments/2026-10-19-sample-co-baseline/` whenever you like.
 
@@ -178,31 +183,35 @@ Skills are Markdown that tell Claude what the law requires and how to check for 
 
 | Guard | Enforced by | What it stops |
 |---|---|---|
-| Workspace layout | `write-guard.mjs` reading [`layout.json`](.claude/schemas/layout.json) | Writes to any path the layout does not list, and path traversal out of the repo |
+| Workspace layout | `write-guard.mjs` reading [`layout.json`](.claude/schemas/layout.json) | Writes to any path the layout does not list, path traversal out of the repo, and edits to the hooks, schemas and settings themselves |
 | Append-only logs | `write-guard.mjs` | Any write to `breach-log.jsonl` or `rights-log.jsonl` whose result does not start with the existing file. Corrections are new lines. |
 | Schema validation | `validate-on-write.mjs`, `npm run validate` | A finding without a clause or severity, a breach entry without an event, a posture with an unknown status. 9 schemas. |
-| Secrets | `write-guard.mjs` | AWS, GitHub and OpenAI-style keys, private keys, `password=` assignments |
-| No personal data in findings | Skill rules and schema shape | Findings carry `file` and `line`, never the value found there |
-| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 8 tests, Node's built-in runner. |
+| Secrets | `write-guard.mjs` | AWS, GitHub, OpenAI and Anthropic-style keys, private keys, password assignments |
+| No personal data in findings | `write-guard.mjs`, skill rules, schema shape | Aadhaar, PAN and +91 mobile numbers in company or assessment data. Findings carry `file` and `line`, never the value found there. Other identifiers rest on the skill rules. |
+| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 22 tests, Node's built-in runner. |
 
-Known limit: hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through Bash is not intercepted, so `.claude/settings.json` only pre-approves the validate and test commands. Details in [SECURITY.md](SECURITY.md).
+Known limit: hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through Bash is not intercepted, so `.claude/settings.json` only pre-approves the validate and test commands. Start Claude Code from the repo folder: a session that moves in from elsewhere cannot find the guard, and every write is blocked until you start a new one. Details in [SECURITY.md](SECURITY.md).
+
+Your own company profiles and assessments are gitignored by default; only the synthetic demo is tracked. Use `git add -f` if you do want them in a private fork.
 
 ## Headless, CI and KPIs
 
 Run a workflow without an interactive session, for example from a nightly job:
 
 ```bash
-node .claude/scripts/run-headless.mjs --workflow audit --company acme-tech --framework dpdp
+node .claude/scripts/run-headless.mjs --workflow audit --company acme-tech --framework dpdp --target ../your-app
 ```
 
-Add `--dry-run` to print the prompt, or `--harness opencode --model <provider/model>` to run on OpenCode. Every argument is validated before it reaches the shell, and the transcript lands in `kpis/data/raw/sessions/`.
+`--target` is the codebase to read. Add `--dry-run` to print the prompt, or `--harness opencode --model <provider/model>` to run on OpenCode (no `--target` there, and the guardrail hooks are Claude Code settings, so don't assume they run). Every argument is validated before it reaches the shell, and the transcript lands in `kpis/data/raw/sessions/`, including a partial one if the run fails.
 
-`npm run kpis` turns transcripts and reports into six numbers:
+On a fresh clone, run `claude` once interactively and accept the trust dialog first. Until then Claude Code ignores the `permissions.allow` list in `.claude/settings.json`.
+
+`npm run kpis` turns transcripts and each company's latest report into six numbers. Add `-- --company acme-tech` for one company; otherwise `sample-co` is pooled with yours until you delete it.
 
 | KPI | Source | On sample-co |
 |---|---|---|
 | Cost per audit | `total_cost_usd` from Claude Code's JSON output | no runs recorded yet |
-| Coverage | examined / applicable controls in each report | 84.8% |
+| Coverage | examined / applicable controls in each report, as counted by the assessor | 84.8% |
 | Actionability | findings with clause, recommendation, owner and due date | 33.3% |
 | Time to remediation | `remediated_at` minus `found_at`, median and p90 | 5 days |
 | Posture trend | dimensions improved or regressed between snapshots | 1 snapshot |
@@ -231,7 +240,7 @@ Plus 7 consent notice templates (including Hindi) in [`examples/consent-notices`
 | `.claude/scripts/` | Hooks, validator, exporters, KPIs, headless runner, tests |
 | `company-profile/{id}/` | Per-organisation data: details, data map, consent records, DPIAs, logs, posture |
 | `assessments/{id}/` | Point-in-time audits: report, posture, summary |
-| `examples/` | Consent notice templates and sector guides |
+| `examples/` | Consent notice templates, sector guides and a synthetic app to audit |
 | `docs/assets/` | README images, logo, [brand sheet](docs/assets/brand-sheet.png) and [design tokens](docs/assets/vigil-tokens.css) |
 
 ## FAQ

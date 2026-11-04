@@ -1,6 +1,6 @@
 ---
 name: remediate
-description: Turn audit findings into a remediation plan ranked by penalty exposure, with owners, due dates, code fixes and verification. Use for "remediation plan", "fix findings", "close gaps".
+description: "Turn audit findings into a remediation plan ranked by penalty exposure, with owners, due dates, code fixes and verification. Use for \"remediation plan\", \"fix findings\", \"close gaps\"."
 ---
 
 # Remediation Workflow

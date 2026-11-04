@@ -1,6 +1,6 @@
 ---
 name: gdpr-audit
-description: Audit code, database schemas and system configuration against EU GDPR and UK GDPR with article-level findings: personal data discovery, lawful basis, minimisation, security (Art. 25, 32), retention and transfers. Use for "GDPR audit", "is this GDPR compliant", "GDPR code review".
+description: "Audit code, database schemas and system configuration against EU GDPR and UK GDPR with article-level findings: personal data discovery, lawful basis, minimisation, security (Art. 25, 32), retention and transfers. Use for \"GDPR audit\", \"is this GDPR compliant\", \"GDPR code review\"."
 ---
 
 # GDPR Code and System Audit

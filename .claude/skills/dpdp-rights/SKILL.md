@@ -1,6 +1,6 @@
 ---
 name: dpdp-rights
-description: Data Principal rights under DPDP ss.11-14 and Rule 14: access, correction and erasure, grievance redressal (90-day ceiling), nomination, with an append-only rights log and SLA tracking. Use for "rights request", "right to erasure", "grievance", "nomination", "DSAR".
+description: "Data Principal rights under DPDP ss.11-14 and Rule 14: access, correction and erasure, grievance redressal (90-day ceiling), nomination, with an append-only rights log and SLA tracking. Use for \"rights request\", \"right to erasure\", \"grievance\", \"nomination\", \"DSAR\"."
 ---
 
 # DPDP Data Principal Rights Management

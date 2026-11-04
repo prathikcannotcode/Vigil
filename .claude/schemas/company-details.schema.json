@@ -6,6 +6,9 @@
   "properties": {
     "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "legal_name": { "type": "string" },
+    "registered_address": { "type": "string" },
+    "approx_users": { "type": "integer", "minimum": 0 },
+    "annual_turnover_eur": { "type": "number", "minimum": 0, "description": "Worldwide annual turnover of the preceding year, for the GDPR Art. 83 percentage caps" },
     "jurisdiction": {
       "type": "array",
       "items": { "type": "string", "enum": ["IN", "EU", "UK", "US", "SG", "other"] }

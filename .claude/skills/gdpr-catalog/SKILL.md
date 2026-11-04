@@ -1,6 +1,6 @@
 ---
 name: gdpr-catalog
-description: Reference registry for EU GDPR, UK GDPR and the Data (Use and Access) Act 2025: article map, penalty tiers, transfer mechanisms, recent CJEU and EDPB developments. Use to cite the right article or check UK divergence.
+description: "Reference registry for EU GDPR, UK GDPR and the Data (Use and Access) Act 2025: article map, penalty tiers, transfer mechanisms, recent CJEU and EDPB developments. Use to cite the right article or check UK divergence."
 ---
 
 # GDPR Regulatory Catalog

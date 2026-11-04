@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased
+
+### Exports
+- OSCAL: `target-id` is now a valid token. Every finding failed NIST's 1.1.2 schema before.
+- SARIF: rules carry `fullDescription` and `help`. Findings with no file and closed findings are left out, because code scanning needs a location and would show them as live alerts. The exporter names what it left out.
+- OCSF: a remediated finding is `status_id` 4 (Resolved), not 3 (Suppressed). In-progress findings are 2.
+- Exporters use each company's latest report, so a re-audit no longer doubles the findings, and they exit 1 for a company with no report.
+
+### Guardrails
+- Hooks find the workspace from `${CLAUDE_PROJECT_DIR}` and the event's `cwd`. Before, a `cd` into a subdirectory made the hook crash with exit 1, which does not block, so writes went through.
+- The write-guard fails closed: a broken layout blocks the write, and `onFailure: block` covers a hook that cannot start (Claude Code 2.1.295 or newer).
+- `.claude/scripts`, `.claude/schemas` and `.claude/settings.json` are out of the writable layout. Agents could rewrite their own guards before.
+- New: Aadhaar (with its check digit), PAN and +91 mobile numbers are blocked in company and assessment data.
+- Secret patterns catch OpenSSH keys, `github_pat_` and `sk-ant-` keys, and JSON-style passwords. "password: hardcoded" in prose no longer blocks a write.
+- The append-only check ignores CRLF differences.
+- `npm run validate` rejects a skill description that is not valid YAML. All 20 are now quoted.
+
+### Usability
+- `examples/acme-demo`: a synthetic app with planted problems and a list of what an audit should find. The README no longer calls the hand-written `sample-co` files real output.
+- `run-headless.mjs --target <dir>` points a headless run at a codebase. The timeout is 2 hours, up from 30 minutes, and a failed run saves its transcript.
+- `npm run kpis -- --company <id>`. KPIs count each company's latest report only.
+- `company-details` accepts the address, user count and turnover that `/onboard` asks for. `/penalty` reads the turnover.
+- `report.json` can record the target repo and commit, model, Vigil version and law-as-at date. Finding `file` paths must be relative.
+- `/penalty` reports DPDP exposure per finding and per provision, because the per-finding total grows with how finely an audit splits its findings.
+- `/export` documents what the scripts do. The import, Component Definition and Maxwell sections described things that did not exist.
+- Real company data is gitignored by default. `"private": true` in `package.json`, because `vigil` on npm is an unrelated package. Added `CITATION.cff`.
+
 ## 0.2.0 (2 November 2026)
 
 ### Skills are real slash commands now

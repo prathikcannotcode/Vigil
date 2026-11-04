@@ -4,7 +4,7 @@ These rules bind all agents (AI and human contributors) working in this reposito
 
 ## Layout
 
-Only write files matching the paths defined in `.claude/schemas/layout.json`. A new file type needs a rule in that layout and a corresponding schema.
+Only write files matching the paths defined in `.claude/schemas/layout.json`. A new file type needs a rule in that layout and a corresponding schema. Agents do not edit `.claude/scripts`, `.claude/schemas` or `.claude/settings.json`; a human changes those by hand.
 
 ## Structured data
 
