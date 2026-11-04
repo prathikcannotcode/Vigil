@@ -1,6 +1,6 @@
 ---
 name: penalty
-description: Maximum penalty exposure under the DPDP Schedule (s.33) and GDPR Art. 83 for open findings, ranked to prioritise remediation. Use for "penalty exposure", "fine risk", "what is the maximum penalty".
+description: "Maximum penalty exposure under the DPDP Schedule (s.33) and GDPR Art. 83 for open findings, ranked to prioritise remediation. Use for \"penalty exposure\", \"fine risk\", \"what is the maximum penalty\"."
 ---
 
 # Penalty Exposure Calculator
@@ -48,14 +48,14 @@ Given an organisation's findings, compute exposure:
 
 ### Input
 - List of open findings with their DPDP section / GDPR article
-- Organisation's worldwide annual turnover (for GDPR %)
+- Organisation's worldwide annual turnover (for GDPR %), from `annual_turnover_eur` in `details.json`. If it is missing, say the fixed caps are a floor.
 - Number of instances per violation type
 - Jurisdiction(s): India only, EU only, both
 
 ### Calculation
 
 **DPDP exposure:**
-For each distinct breach (finding), look up the Schedule cap. Breaches of different provisions add up; the same provision breached in separate incidents can attract separate penalties. Sum the caps. Label the total "maximum theoretical": s.33(2) requires the Board to weigh proportionality.
+For each distinct breach (finding), look up the Schedule cap. Breaches of different provisions add up; the same provision breached in separate incidents can attract separate penalties. Report two totals: per finding (sum every finding's cap) and per provision (count each Schedule entry once). The per-finding total grows with how finely the audit split its findings, so never show it alone. Label both "maximum theoretical": s.33(2) requires the Board to weigh proportionality.
 
 **GDPR exposure:**
 For each finding, determine the tier: Art. 83(4) (lower) or Art. 83(5)-(6) (upper). The cap is the higher of the fixed amount (EUR 10M or 20M) and the turnover percentage (2% or 4% of total worldwide annual turnover of the preceding year).
@@ -74,7 +74,8 @@ PENALTY EXPOSURE SUMMARY
 DPDP exposure (prospective until 13 May 2027):
   F-0001 Security safeguards, s.8(5) ................. Rs 250 crore
   F-0004 Children's data, s.9(3) ..................... Rs 200 crore
-  Maximum theoretical total .......................... Rs 450 crore
+  Maximum theoretical, per finding ................... Rs 450 crore
+  Maximum theoretical, per provision ................. Rs 450 crore
 
 GDPR exposure (turnover: EUR 50M):
   Checkout processing (linked: F-0002 Art. 7, F-0003 Art. 32)

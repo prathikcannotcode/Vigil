@@ -12,6 +12,7 @@
  * Options:
  *   --workflow <name>       audit, onboard, remediate or refresh
  *   --company <id>          Company profile ID (lowercase letters, digits, hyphens)
+ *   --target <dir>          Codebase to read (claude-code only). Without it, only this workspace is in reach.
  *   --framework <name>      dpdp, gdpr, or both (default: both)
  *   --harness <name>        claude-code (default) or opencode
  *   --model <id>            Model override for opencode (e.g., provider/model)
@@ -20,7 +21,7 @@
  */
 
 import { execSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const args = process.argv.slice(2);
@@ -38,6 +39,7 @@ function die(message) {
 
 const workflow = flag('workflow');
 const company = flag('company');
+const target = flag('target');
 const framework = flag('framework') || 'both';
 const harness = flag('harness') || 'claude-code';
 const model = flag('model');
@@ -52,6 +54,11 @@ if (!/^[a-z0-9-]+$/.test(company)) die(`Invalid --company "${company}": use lowe
 if (!['dpdp', 'gdpr', 'both'].includes(framework)) die(`Invalid --framework "${framework}": use dpdp, gdpr or both.`);
 if (!['claude-code', 'opencode'].includes(harness)) die(`Invalid --harness "${harness}": use claude-code or opencode.`);
 if (model && !/^[\w.:/-]+$/.test(model)) die(`Invalid --model "${model}".`);
+if (target) {
+  if (!/^[\w.:/\\ -]+$/.test(target)) die(`Invalid --target "${target}": use letters, digits, spaces, dots, hyphens and path separators.`);
+  if (!existsSync(target)) die(`--target not found: ${target}`);
+  if (harness !== 'claude-code') die('--target only works with --harness claude-code.');
+}
 
 const scopeOf = fw => (fw === 'both' ? 'DPDP and GDPR' : fw.toUpperCase());
 const NO_QUESTIONS = 'This is a headless run: do not ask questions. Where information is missing, record it as not assessed and list the open questions in your final message.';
@@ -69,7 +76,7 @@ const WORKFLOWS = {
 
 if (!WORKFLOWS[workflow]) die(`Unknown workflow: ${workflow}\nAvailable: ${Object.keys(WORKFLOWS).join(', ')}`);
 
-const prompt = WORKFLOWS[workflow](company, framework);
+const prompt = WORKFLOWS[workflow](company, framework) + (target ? ` The codebase to read is at ${target}; record file paths relative to its root.` : '');
 
 if (dryRun) {
   console.log('Prompt that would be sent:');
@@ -77,6 +84,7 @@ if (dryRun) {
   console.log(prompt);
   console.log('---');
   console.log(`Harness: ${harness}`);
+  if (target) console.log(`Target: ${target}`);
   if (model) console.log(`Model: ${model}`);
   process.exit(0);
 }
@@ -89,7 +97,20 @@ const sessionFile = join(outputDir, `${workflow}_${company}_${startedAt.toISOStr
 // acceptEdits lets the run write its reports; the write-guard hook still limits where.
 const cmd = harness === 'opencode'
   ? `opencode run "${prompt}"${model ? ` --model ${model}` : ''}`
-  : `claude --print --output-format json --permission-mode acceptEdits "${prompt}"`;
+  : `claude --print --output-format json --permission-mode acceptEdits${target ? ` --add-dir "${target}"` : ''} "${prompt}"`;
+
+const saveSession = (output, error) => writeFileSync(sessionFile, JSON.stringify({
+  workflow,
+  company,
+  framework,
+  harness,
+  model: model || null,
+  target: target || null,
+  started_at: startedAt.toISOString(),
+  completed_at: new Date().toISOString(),
+  ...(error ? { error } : {}),
+  output,
+}, null, 2));
 
 console.log(`Running ${workflow} for ${company} (${framework})...`);
 console.log(`Harness: ${harness}`);
@@ -101,23 +122,14 @@ try {
     cwd: process.cwd(),
     encoding: 'utf8',
     stdio: ['pipe', 'pipe', 'inherit'],
-    timeout: 1_800_000,
+    timeout: 7_200_000,
+    maxBuffer: 64 * 1024 * 1024,
   });
 
-  const session = {
-    workflow,
-    company,
-    framework,
-    harness,
-    model: model || null,
-    started_at: startedAt.toISOString(),
-    completed_at: new Date().toISOString(),
-    output,
-  };
-
-  writeFileSync(sessionFile, JSON.stringify(session, null, 2));
+  saveSession(output);
   console.log(`Session saved to ${sessionFile}`);
   console.log('Run npm run validate, then npm run kpis to compute metrics from this session.');
 } catch (e) {
-  die(`Workflow failed: ${e.message}`);
+  saveSession(e.stdout ?? '', e.message);
+  die(`Workflow failed: ${e.message}\nPartial transcript saved to ${sessionFile}`);
 }

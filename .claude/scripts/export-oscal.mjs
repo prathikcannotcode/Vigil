@@ -9,7 +9,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { loadFindings, packageVersion } from './lib.mjs';
+import { loadFindings, requireReport, packageVersion } from './lib.mjs';
 
 const args = process.argv.slice(2);
 function flag(name) {
@@ -24,6 +24,10 @@ if (!company) {
   console.error('Usage: node .claude/scripts/export-oscal.mjs --company <id> --output <file>');
   process.exit(1);
 }
+requireReport(company);
+
+// OSCAL target-id is a token: a letter or underscore, then letters, digits, dots, hyphens or underscores.
+const token = text => text.replace(/[^\p{L}\p{N}._-]+/gu, '-').replace(/-+$/, '');
 
 const postureFile = join('company-profile', company, 'posture.json');
 const posture = existsSync(postureFile) ? JSON.parse(readFileSync(postureFile, 'utf8')) : null;
@@ -49,7 +53,7 @@ const oscalFindings = findings.map(f => {
     title: f.issue || 'Untitled finding',
     description: f.recommendation || '',
     target: {
-      'target-id': f.clause || 'unknown',
+      'target-id': token(`${f.framework}-${f.clause}`),
       type: 'objective-id',
       status: { state: f.status === 'remediated' ? 'satisfied' : 'not-satisfied' },
     },
@@ -57,6 +61,7 @@ const oscalFindings = findings.map(f => {
     props: [
       { name: 'severity', value: f.severity },
       { name: 'framework', value: f.framework },
+      { name: 'clause', value: f.clause },
       { name: 'vigil-id', value: f.id },
     ],
   };

@@ -11,6 +11,19 @@
     "started_at": { "type": "string", "format": "date-time" },
     "completed_at": { "type": "string", "format": "date-time" },
     "assessor": { "type": "string", "description": "Who or what ran the audit, e.g. 'Vigil on Claude Code'" },
+    "target": {
+      "type": "object",
+      "description": "The codebase audited, so a reader can check the findings against the same code",
+      "required": ["repo"],
+      "properties": {
+        "repo": { "type": "string", "description": "Repository name or URL" },
+        "commit": { "type": "string", "description": "Commit SHA, if it is a git repository" }
+      },
+      "additionalProperties": false
+    },
+    "model": { "type": "string", "description": "Model that ran the audit, e.g. 'claude-sonnet-5-5'" },
+    "vigil_version": { "type": "string", "description": "The version in package.json" },
+    "law_as_at": { "type": "string", "format": "date", "description": "The 'Last verified' date of the catalogs relied on" },
     "coverage": {
       "type": "object",
       "required": ["applicable", "examined"],

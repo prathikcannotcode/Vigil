@@ -7,7 +7,7 @@
  */
 
 import { writeFileSync } from 'node:fs';
-import { loadFindings, packageVersion } from './lib.mjs';
+import { loadFindings, requireReport, packageVersion } from './lib.mjs';
 
 const args = process.argv.slice(2);
 function flag(name) {
@@ -22,8 +22,10 @@ if (!company) {
   console.error('Usage: node .claude/scripts/export-ocsf.mjs --company <id> --output <file>');
   process.exit(1);
 }
+requireReport(company);
 
 const SEVERITY_ID = { low: 2, medium: 3, high: 4, critical: 5 };
+const STATUS_ID = { open: 1, in_progress: 2, disputed: 2, accepted: 3, remediated: 4 }; // New, In Progress, Suppressed, Resolved
 const findings = loadFindings(company);
 const version = packageVersion();
 
@@ -33,7 +35,7 @@ const events = findings.map(f => ({
   activity_id: 1,
   type_uid: 200301,
   severity_id: SEVERITY_ID[f.severity] ?? 0,
-  status_id: f.status === 'remediated' ? 3 : 1,
+  status_id: STATUS_ID[f.status] ?? 1,
   time: Date.parse(f.found_at ?? '') || Date.now(),
   metadata: {
     version: '1.3.0',

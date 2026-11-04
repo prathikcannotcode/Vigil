@@ -8,7 +8,7 @@
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { loadFindings, packageVersion } from './lib.mjs';
+import { loadFindings, requireReport, packageVersion } from './lib.mjs';
 
 const args = process.argv.slice(2);
 function flag(name) {
@@ -25,9 +25,16 @@ if (!inputFile && !company) {
   process.exit(1);
 }
 
-const findings = inputFile
+if (!inputFile) requireReport(company);
+
+const all = inputFile
   ? JSON.parse(readFileSync(inputFile, 'utf8')).findings ?? []
   : loadFindings(company);
+
+// Code scanning needs a location to display a result, and a closed finding is not a live alert.
+const closed = all.filter(f => ['remediated', 'accepted'].includes(f.status));
+const unlocated = all.filter(f => !f.file && !closed.includes(f));
+const findings = all.filter(f => f.file && !closed.includes(f));
 
 function severityToLevel(sev) {
   switch (sev) {
@@ -51,6 +58,8 @@ for (const f of findings) {
     rules.set(ruleId, {
       id: ruleId,
       shortDescription: { text: `${f.framework || 'Unknown'} ${f.clause || 'unknown clause'}` },
+      fullDescription: { text: `Possible gap against ${f.framework || 'Unknown'} ${f.clause || 'unknown clause'}. Each result states the issue and a recommendation.` },
+      help: { text: 'Compliance tooling, not legal advice. Check the clause with /dpdp-catalog or /gdpr-catalog before relying on it.' },
       defaultConfiguration: { level: severityToLevel(f.severity) },
     });
   }
@@ -73,14 +82,12 @@ const sarif = {
       level: severityToLevel(f.severity),
       // SARIF `fixes` require concrete artifactChanges, so the recommendation travels in the message.
       message: { text: f.recommendation ? `${f.issue} Recommendation: ${f.recommendation}` : f.issue || '' },
-      ...(f.file ? {
-        locations: [{
-          physicalLocation: {
-            artifactLocation: { uri: f.file },
-            ...(f.line ? { region: { startLine: f.line } } : {}),
-          },
-        }],
-      } : {}),
+      locations: [{
+        physicalLocation: {
+          artifactLocation: { uri: f.file.replace(/\\/g, '/') },
+          ...(f.line ? { region: { startLine: f.line } } : {}),
+        },
+      }],
       properties: { id: f.id, severity: f.severity, status: f.status ?? 'open', clause: f.clause },
     })),
   }],
@@ -88,3 +95,5 @@ const sarif = {
 
 writeFileSync(outputFile, JSON.stringify(sarif, null, 2));
 console.log(`SARIF 2.1.0 exported: ${findings.length} findings -> ${outputFile}`);
+if (unlocated.length) console.log(`Left out, no file to point at: ${unlocated.map(f => f.id).join(', ')}. They stay in report.json, OSCAL and OCSF.`);
+if (closed.length) console.log(`Left out, remediated or accepted: ${closed.map(f => f.id).join(', ')}.`);

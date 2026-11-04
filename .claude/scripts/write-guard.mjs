@@ -5,6 +5,7 @@
  * 1. Writes outside the workspace layout (.claude/schemas/layout.json)
  * 2. Rewrites of append-only logs (breach-log.jsonl, rights-log.jsonl)
  * 3. Content containing secret-shaped strings (API keys, passwords, tokens)
+ * 4. Identifiers in company or assessment data (Aadhaar, PAN, +91 mobile numbers)
  *
  * Used as a PreToolUse hook on Write, Edit and MultiEdit.
  * Reads the event from stdin, exits 2 to block with a message.
@@ -12,19 +13,34 @@
 
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, relative, isAbsolute } from 'node:path';
-import { loadLayout, matchRule } from './lib.mjs';
-
-const root = process.cwd();
+import { loadLayout, matchRule, workspaceRoot } from './lib.mjs';
 
 const SECRET_PATTERNS = [
-  /(?:api[_-]?key|apikey)\s*[:=]\s*["']?[A-Za-z0-9_\-]{20,}/i,
-  /(?:secret|password|passwd|pwd)\s*[:=]\s*["']?[^\s"']{8,}/i,
+  /(?:api[_-]?key|apikey)["']?\s*[:=]\s*["']?[A-Za-z0-9_\-]{20,}/i,
+  // A quoted or assigned value, or a bare `key: value` with a digit or symbol, so "password: hardcoded" in prose passes.
+  /(?:secret|password|passwd|pwd)["']?\s*(?:[:=]\s*["'][^\s"']{8,}|=\s*[^\s"']{8,}|:\s*(?=[^\s"']*[\d!@#$%^&*])[^\s"']{8,})/i,
   /(?:bearer|token)\s+[A-Za-z0-9_\-\.]{20,}/i,
-  /-----BEGIN (?:RSA |EC )?PRIVATE KEY-----/,
+  /-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----/,
   /AKIA[0-9A-Z]{16}/,
-  /ghp_[A-Za-z0-9]{36}/,
-  /sk-[A-Za-z0-9]{32,}/,
+  /gh[pousr]_[A-Za-z0-9]{36}/,
+  /github_pat_[A-Za-z0-9_]{22,}/,
+  /\bsk-[A-Za-z0-9_\-]{32,}/,
 ];
+
+const VERHOEFF_D = ['0123456789', '1234067895', '2340178956', '3401289567', '4012395678', '5987604321', '6598710432', '7659821043', '8760932154', '9876543210'];
+const VERHOEFF_P = ['0123456789', '1576283094', '5803796142', '8916043527', '9453126870', '4286573901', '2793806415', '7046913258'];
+
+// Aadhaar numbers carry a Verhoeff check digit, which keeps large penalty amounts from matching.
+function isAadhaar(digits) {
+  let c = 0;
+  [...digits].reverse().forEach((n, i) => { c = Number(VERHOEFF_D[c][Number(VERHOEFF_P[i % 8][Number(n)])]); });
+  return c === 0;
+}
+
+function hasPersonalData(text) {
+  const aadhaar = [...text.matchAll(/\b[2-9]\d{3}[ -]?\d{4}[ -]?\d{4}\b/g)].some(m => isAadhaar(m[0].replace(/\D/g, '')));
+  return aadhaar || /\b[A-Z]{3}[ABCFGHJLPT][A-Z]\d{4}[A-Z]\b/.test(text) || /\+91[ -]?[6-9]\d{9}\b/.test(text);
+}
 
 function block(reason) {
   console.error(`Write blocked: ${reason}`);
@@ -51,28 +67,28 @@ function contentAfter(before, toolName, input) {
   return text;
 }
 
-let raw = '';
-process.stdin.setEncoding('utf8');
-process.stdin.on('data', chunk => { raw += chunk; });
-process.stdin.on('end', () => {
-  let event;
-  try { event = JSON.parse(raw); }
-  catch { process.exit(0); } // not a tool event we understand; nothing to guard
+const lf = text => text.replace(/\r\n/g, '\n');
 
+function guard(event) {
   const input = event.tool_input ?? {};
   const filePath = input.file_path;
-  if (!filePath) process.exit(0);
+  if (!filePath) return;
 
-  const abs = resolve(root, filePath);
+  // The event's cwd follows Claude; the others cover a cwd this platform can't read.
+  const start = [event.cwd, process.cwd(), process.env.CLAUDE_PROJECT_DIR].find(dir => dir && workspaceRoot(dir));
+  if (!start) block('no workspace layout found at or above the working directory');
+  const root = workspaceRoot(start);
+
+  const abs = resolve(start, filePath);
   const rel = relative(root, abs).replace(/\\/g, '/');
   if (rel === '..' || rel.startsWith('../') || isAbsolute(rel)) block(`path outside workspace: ${filePath}`);
 
   const rule = matchRule(loadLayout(root), rel);
-  if (!rule) block(`path not in workspace layout: ${rel}. Add a rule to .claude/schemas/layout.json first.`);
+  if (!rule) block(`path not in workspace layout: ${rel}. Agents may not write here; a maintainer can change the layout by hand.`);
 
   if (rule.append_only && existsSync(abs)) {
     const before = readFileSync(abs, 'utf8');
-    if (!contentAfter(before, event.tool_name, input).startsWith(before)) {
+    if (!lf(contentAfter(before, event.tool_name, input)).startsWith(lf(before))) {
       block(`${rel} is append-only. Add new entries at the end; never modify or delete existing ones.`);
     }
   }
@@ -81,6 +97,21 @@ process.stdin.on('end', () => {
   if (SECRET_PATTERNS.some(p => p.test(content))) {
     block('content looks like it contains a secret (API key, password, or token). Store secrets in environment variables or encrypted references.');
   }
+  if (/^(company-profile|assessments)\//.test(rel) && hasPersonalData(content)) {
+    block('content looks like it contains personal data (Aadhaar, PAN or a +91 mobile number). Reference it by file and line instead.');
+  }
+}
 
+let raw = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', chunk => { raw += chunk; });
+process.stdin.on('end', () => {
+  let event;
+  try { event = JSON.parse(raw); }
+  catch { process.exit(0); } // not a tool event we understand; nothing to guard
+
+  // Only exit 2 blocks, so an unexpected error here must not let the write through.
+  try { guard(event); }
+  catch (e) { block(`guard error: ${e.message}`); }
   process.exit(0);
 });

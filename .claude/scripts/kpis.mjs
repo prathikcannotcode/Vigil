@@ -4,6 +4,7 @@
  * Compute Vigil KPIs from session transcripts and workspace state.
  *
  * Usage: npm run kpis
+ *        npm run kpis -- --company <id>   (one company; otherwise every company is pooled)
  *
  * Reads:
  *   - kpis/data/raw/sessions/   (session transcripts from headless runs)
@@ -16,10 +17,14 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { listFiles, loadReports } from './lib.mjs';
+import { listFiles, loadReports, latestReports, requireReport } from './lib.mjs';
 
 const root = process.cwd();
 const DAY = 24 * 60 * 60 * 1000;
+const companyArg = process.argv.indexOf('--company');
+const company = companyArg === -1 ? undefined : process.argv[companyArg + 1];
+if (company) requireReport(company, root);
+const inScope = r => !company || r.company_id === company;
 
 function readJson(rel) {
   try { return JSON.parse(readFileSync(join(root, rel), 'utf8')); }
@@ -42,20 +47,26 @@ for (const s of sessions) {
   } catch { /* harness without cost data */ }
 }
 
-const reports = loadReports(root).sort((a, b) => a.started_at.localeCompare(b.started_at));
+// Each company's latest report is its current state; older ones would count the same findings twice.
+const reports = latestReports(root).filter(inScope);
 const findings = reports.flatMap(r => r.findings);
 
 // 2. Coverage: latest report per company that recorded coverage.
-const latestCoverage = new Map();
-for (const r of reports) if (r.coverage) latestCoverage.set(r.company_id, r.coverage);
-const applicable = [...latestCoverage.values()].reduce((n, c) => n + c.applicable, 0);
-const examined = [...latestCoverage.values()].reduce((n, c) => n + c.examined, 0);
+const coverages = reports.map(r => r.coverage).filter(Boolean);
+const applicable = coverages.reduce((n, c) => n + c.applicable, 0);
+const examined = coverages.reduce((n, c) => n + c.examined, 0);
 
 // 3. Actionability: recommendation, clause, owner and deadline all present.
 const actionable = findings.filter(f => f.recommendation && f.clause && f.owner && f.due_date);
 
-// 4. Time to remediation, in days.
-const days = findings.filter(f => f.found_at && f.remediated_at)
+// 4. Time to remediation, in days. Every report counts, since a fix may drop out of the next audit.
+const remediated = new Map();
+for (const r of loadReports(root).filter(inScope)) {
+  for (const f of r.findings) {
+    if (f.found_at && f.remediated_at) remediated.set(`${r.company_id}|${f.clause}|${f.file}|${f.remediated_at}`, f);
+  }
+}
+const days = [...remediated.values()]
   .map(f => Math.max(0, Math.round((Date.parse(f.remediated_at) - Date.parse(f.found_at)) / DAY)))
   .sort((a, b) => a - b);
 
@@ -64,7 +75,7 @@ const RANK = { non_compliant: 0, partially_compliant: 1, compliant: 2 };
 const snapshots = new Map();
 for (const rel of listFiles(root).filter(f => /^(assessments|company-profile)\/[^/]+\/posture\.json$/.test(f))) {
   const p = readJson(rel);
-  if (!p) continue;
+  if (!p || !inScope(p)) continue;
   const list = snapshots.get(p.company_id) ?? [];
   if (!list.some(s => s.assessed_at === p.assessed_at)) list.push(p);
   snapshots.set(p.company_id, list);

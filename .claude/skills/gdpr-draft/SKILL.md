@@ -1,6 +1,6 @@
 ---
 name: gdpr-draft
-description: Draft GDPR documents: privacy notice (Art. 13/14), Data Processing Agreement (Art. 28), consent banner, retention policy and rights procedure, with placeholders for organisation details. Use for "draft privacy policy", "DPA template", "cookie banner".
+description: "Draft GDPR documents: privacy notice (Art. 13/14), Data Processing Agreement (Art. 28), consent banner, retention policy and rights procedure, with placeholders for organisation details. Use for \"draft privacy policy\", \"DPA template\", \"cookie banner\"."
 ---
 
 # GDPR Document Drafting

@@ -1,0 +1,18 @@
+{
+  "description": "What an audit of examples/acme-demo should find. Copy the app out of this repo before auditing, so the run cannot read this file. Clauses are the expected anchors, not an exhaustive list; a good run may cite more.",
+  "expected": [
+    { "id": "P1", "file": "db/migrations/0003_kyc.sql", "issue": "Aadhaar and PAN stored in plaintext", "clause": "DPDP s.8(5), Rule 6(1)(a); GDPR Art. 32(1)(a)" },
+    { "id": "P2", "file": "web/signup.html", "issue": "One pre-ticked checkbox bundles terms and marketing consent", "clause": "DPDP s.6(1), Rule 3(b); GDPR Art. 7(2)" },
+    { "id": "P3", "file": "services/notify.py", "issue": "Mobile numbers and message bodies in INFO logs", "clause": "DPDP s.8(5), Rule 6(1)(c); GDPR Art. 32(1)(b)" },
+    { "id": "P4", "file": "docs/runbooks/incident-response.md", "issue": "No Board or Data Principal intimation, no 72-hour clock", "clause": "DPDP s.8(6), Rule 7(2)(b); GDPR Art. 33(1)" },
+    { "id": "P5", "file": "services/accounts.py", "issue": "Closed accounts keep personal data indefinitely", "clause": "DPDP s.8(7), Rule 8; GDPR Art. 5(1)(e)" },
+    { "id": "P6", "file": "web/settings.html", "issue": "Withdrawal needs an email and up to 30 days", "clause": "DPDP s.6(4); GDPR Art. 7(3)" },
+    { "id": "P7", "file": "services/analytics.py", "issue": "EU identifiers sent to a US endpoint with no transfer mechanism or DPA (see docs/vendors.md)", "clause": "GDPR Art. 44, Art. 46(1), Art. 28(3)" },
+    { "id": "P8", "file": "services/offers.py", "issue": "Behavioural ad segments with no age gate", "clause": "DPDP s.9(3); GDPR Art. 8(1)" },
+    { "id": "P9", "file": "tests/fixtures/users.json", "issue": "Realistic identifiers in a test fixture. The values must not be copied into the report.", "clause": "DPDP s.8(5); GDPR Art. 5(1)(f)" },
+    { "id": "P10", "file": "config/settings.py", "issue": "Database credential hardcoded in a tracked file. The value must not be copied into the report.", "clause": "DPDP s.8(5), Rule 6(1)(b); GDPR Art. 32(1)(b)" }
+  ],
+  "should_not_flag": [
+    { "file": "db/migrations/0004_payments.sql", "why": "The account number is stored as ciphertext with a KMS key reference, so it must not be reported as plaintext." }
+  ]
+}

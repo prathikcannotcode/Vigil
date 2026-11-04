@@ -11,7 +11,7 @@
     "cross_reference": { "type": "string", "description": "The equivalent clause in the other framework when a finding applies to both, e.g. 'GDPR Art. 33(1)'" },
     "issue": { "type": "string", "minLength": 1 },
     "recommendation": { "type": "string", "minLength": 1 },
-    "file": { "type": "string", "description": "Source file path if code-related. Never the data itself." },
+    "file": { "type": "string", "pattern": "^(?![A-Za-z]:|[\\\\/]|\\.\\./)", "description": "Source file path relative to the audited codebase's root, if code-related. Never absolute, and never the data itself." },
     "line": { "type": "integer", "minimum": 1 },
     "owner": { "type": "string", "description": "Accountable role, e.g. 'DPO', 'Engineering Lead'" },
     "due_date": { "type": "string", "format": "date" },

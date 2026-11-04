@@ -11,8 +11,8 @@ Six KPIs track audit quality from cost to outcome. `npm run kpis` computes them 
 ## 2. Coverage
 
 **What:** Share of applicable controls examined in the audit period.
-**How:** Count findings (any status) per applicable framework control. Controls with zero findings in the period are uncovered.
-**Formula:** `covered_controls / total_applicable_controls`
+**How:** `coverage.examined` and `coverage.applicable` from each company's latest report. The assessor counts both; there is no fixed control list, so don't compare the figure across runs.
+**Formula:** `examined / applicable`
 **Target:** 100% for critical controls; 80%+ overall.
 
 ## 3. Actionability

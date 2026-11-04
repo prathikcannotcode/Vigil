@@ -1,6 +1,6 @@
 ---
 name: dpdp-breach
-description: Personal data breach response under DPDP s.8(6) and Rule 7: assess, contain, notify the Data Protection Board (72-hour report) and every affected Data Principal, run parallel CERT-In and sector reporting, then review. Use for "data breach", "breach notification", "notify the Board", "incident response".
+description: "Personal data breach response under DPDP s.8(6) and Rule 7: assess, contain, notify the Data Protection Board (72-hour report) and every affected Data Principal, run parallel CERT-In and sector reporting, then review. Use for \"data breach\", \"breach notification\", \"notify the Board\", \"incident response\"."
 ---
 
 # DPDP Breach Response

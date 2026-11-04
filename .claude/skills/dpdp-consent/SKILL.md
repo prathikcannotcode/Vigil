@@ -1,6 +1,6 @@
 ---
 name: dpdp-consent
-description: DPDP consent lifecycle: notices (s.5, Rule 3), valid consent (s.6), withdrawal, Consent Managers (Rule 4), dark-pattern review, and verifiable parental consent (s.9, Rule 10). Use for "consent notice", "consent audit", "withdraw consent", "dark patterns", "children's consent".
+description: "DPDP consent lifecycle: notices (s.5, Rule 3), valid consent (s.6), withdrawal, Consent Managers (Rule 4), dark-pattern review, and verifiable parental consent (s.9, Rule 10). Use for \"consent notice\", \"consent audit\", \"withdraw consent\", \"dark patterns\", \"children's consent\"."
 ---
 
 # DPDP Consent Management

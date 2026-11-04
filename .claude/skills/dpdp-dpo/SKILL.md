@@ -1,6 +1,6 @@
 ---
 name: dpdp-dpo
-description: Set up and run the Data Protection Officer function under the DPDP Act 2023 and Rules 2025 (India): DPO charter, independence check, monitoring calendar, quarterly board report. Use for "set up DPO", "DPO charter", "board report", "grievance officer".
+description: "Set up and run the Data Protection Officer function under the DPDP Act 2023 and Rules 2025 (India): DPO charter, independence check, monitoring calendar, quarterly board report. Use for \"set up DPO\", \"DPO charter\", \"board report\", \"grievance officer\"."
 ---
 
 # DPDP Data Protection Officer Governance

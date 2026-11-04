@@ -1,6 +1,6 @@
 ---
 name: reg-monitor
-description: Track DPDP and GDPR regulatory changes, deadlines and their impact on the organisation. Use for "has the law changed", "regulatory update", "upcoming deadlines", "what is in force".
+description: "Track DPDP and GDPR regulatory changes, deadlines and their impact on the organisation. Use for \"has the law changed\", \"regulatory update\", \"upcoming deadlines\", \"what is in force\"."
 ---
 
 # Regulatory Monitor

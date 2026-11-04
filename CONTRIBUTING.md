@@ -26,7 +26,7 @@ No `npm install`. Everything runs on Node 22+ built-ins.
 ## Rules of the road
 
 1. **Cite the official source.** Gazette of India, EUR-Lex, legislation.gov.uk, a regulator's own site. Commentary helps, but never as the only source. If the date or clause is uncertain, say so in the skill.
-2. **Keep to the layout.** A new file type needs a rule in `.claude/schemas/layout.json` and, for JSON, a schema. The write-guard hook will stop you otherwise, which is the point.
+2. **Keep to the layout.** A new file type needs a rule in `.claude/schemas/layout.json` and, for JSON, a schema. The write-guard hook will stop you otherwise, which is the point. Hooks, schemas and settings are off limits to agents, so edit those by hand.
 3. **One skill per directory.** `.claude/skills/<name>/SKILL.md` with `name` (matching the directory) and `description` frontmatter. Sections: trigger, purpose, legal basis, capabilities, guardrails, commands.
 4. **No real personal data.** Not in fixtures, issues, screenshots or test output. Use `sample-co` style synthetic data.
 5. **Append-only logs stay append-only.** Even in examples.

@@ -1,6 +1,6 @@
 ---
 name: gdpr-data-flows
-description: Map personal data flows and check them against the Record of Processing Activities (Art. 30), lawful basis, processors and transfers. Use for "data mapping", "RoPA", "where does personal data go", "data inventory".
+description: "Map personal data flows and check them against the Record of Processing Activities (Art. 30), lawful basis, processors and transfers. Use for \"data mapping\", \"RoPA\", \"where does personal data go\", \"data inventory\"."
 ---
 
 # GDPR Data Flow and PII Review

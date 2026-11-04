@@ -1,6 +1,6 @@
 ---
 name: gdpr-qa
-description: Answer GDPR and UK GDPR questions with article citations, CJEU and EDPB developments, and UK DUAA 2025 divergence. Use for "what does GDPR say about", "lawful basis", "is this allowed under GDPR".
+description: "Answer GDPR and UK GDPR questions with article citations, CJEU and EDPB developments, and UK DUAA 2025 divergence. Use for \"what does GDPR say about\", \"lawful basis\", \"is this allowed under GDPR\"."
 ---
 
 # GDPR Compliance Q&A
