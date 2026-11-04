@@ -284,3 +284,19 @@ test('run-headless can point at a codebase', () => {
   assert.equal(run('run-headless.mjs', { args: [...args, '--target', dir, '--harness', 'opencode'] }).status, 1);
   rmSync(dir, { recursive: true });
 });
+
+test('hook commands find the guard, even when the project dir is stale', { skip: process.platform === 'win32' }, () => { // bash on Windows may resolve to WSL
+  const { hooks } = JSON.parse(readFileSync(join(repo, '.claude/settings.json'), 'utf8'));
+  const hook = (event, cwd, projectDir, file) => spawnSync('bash', ['-c', hooks[event][0].hooks[0].command], {
+    cwd, encoding: 'utf8', env: { ...process.env, CLAUDE_PROJECT_DIR: projectDir },
+    input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: join(repo, file), content: 'x' } }),
+  }).status;
+  assert.equal(hook('PreToolUse', repo, repo, 'src/app.js'), 2);
+  assert.equal(hook('PreToolUse', repo, repo, 'README.md'), 0);
+  assert.equal(hook('PreToolUse', join(repo, 'docs'), repo, 'src/app.js'), 2, 'after a cd');
+  assert.equal(hook('PreToolUse', repo, '/no/such/dir', 'src/app.js'), 2, 'session moved in from elsewhere');
+  assert.equal(hook('PreToolUse', repo, '/no/such/dir', 'README.md'), 0, 'session moved in from elsewhere');
+  assert.equal(hook('PreToolUse', join(repo, 'docs'), '/no/such/dir', 'README.md'), 1, 'cannot find the guard, so onFailure: block applies');
+  assert.equal(hook('PostToolUse', repo, '/no/such/dir', 'README.md'), 0);
+  assert.equal(hooks.PreToolUse[0].hooks[0].onFailure, 'block');
+});

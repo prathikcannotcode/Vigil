@@ -9,7 +9,7 @@
 - Exporters use each company's latest report, so a re-audit no longer doubles the findings, and they exit 1 for a company with no report.
 
 ### Guardrails
-- Hooks find the workspace from `${CLAUDE_PROJECT_DIR}` and the event's `cwd`. Before, a `cd` into a subdirectory made the hook crash with exit 1, which does not block, so writes went through.
+- Hooks find the guard under `${CLAUDE_PROJECT_DIR}`, or relative to the working directory in a session that moved here from elsewhere, and find the workspace from the event's `cwd`. Before, a `cd` into a subdirectory made the hook crash with exit 1, which does not block, so writes went through.
 - The write-guard fails closed: a broken layout blocks the write, and `onFailure: block` covers a hook that cannot start (Claude Code 2.1.295 or newer).
 - `.claude/scripts`, `.claude/schemas` and `.claude/settings.json` are out of the writable layout. Agents could rewrite their own guards before.
 - New: Aadhaar (with its check digit), PAN and +91 mobile numbers are blocked in company and assessment data.

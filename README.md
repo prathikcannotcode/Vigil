@@ -188,9 +188,9 @@ Skills are Markdown that tell Claude what the law requires and how to check for 
 | Schema validation | `validate-on-write.mjs`, `npm run validate` | A finding without a clause or severity, a breach entry without an event, a posture with an unknown status. 9 schemas. |
 | Secrets | `write-guard.mjs` | AWS, GitHub, OpenAI and Anthropic-style keys, private keys, password assignments |
 | No personal data in findings | `write-guard.mjs`, skill rules, schema shape | Aadhaar, PAN and +91 mobile numbers in company or assessment data. Findings carry `file` and `line`, never the value found there. Other identifiers rest on the skill rules. |
-| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 22 tests, Node's built-in runner. |
+| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 23 tests, Node's built-in runner. |
 
-Known limit: hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through Bash is not intercepted, so `.claude/settings.json` only pre-approves the validate and test commands. Start Claude Code from the repo folder: a session that moves in from elsewhere cannot find the guard, and every write is blocked until you start a new one. Details in [SECURITY.md](SECURITY.md).
+Known limit: hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through Bash is not intercepted, so `.claude/settings.json` only pre-approves the validate and test commands. Details in [SECURITY.md](SECURITY.md).
 
 Your own company profiles and assessments are gitignored by default; only the synthetic demo is tracked. Use `git add -f` if you do want them in a private fork.
 

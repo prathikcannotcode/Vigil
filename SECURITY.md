@@ -18,7 +18,8 @@ Include what you found, how to reproduce it, and the impact.
 - Hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through the Bash tool is not intercepted; keep Bash permissions narrow (`.claude/settings.json` allows only the validate and test commands by default).
 - The secret and personal-data patterns catch common formats. They are a tripwire, not a scanner.
 - `onFailure: block` needs Claude Code 2.1.295 or newer. On older versions, a hook that cannot start at all does not block the write.
-- The hook command runs from `${CLAUDE_PROJECT_DIR}`, the folder a session started in. A session that moves into this repo after starting elsewhere cannot find the guard, so every write is blocked until you start a new session here.
+- The hook command looks for the guard under `${CLAUDE_PROJECT_DIR}`, the folder a session started in, then relative to the working directory. A session that moved here from elsewhere and then changed into a subdirectory can't find it, so writes are blocked until it returns to the repo root.
+- On Windows without Git Bash, Claude Code runs hooks in PowerShell, which can't parse this command. The write-guard then blocks every write, and post-write validation does not run. Install Git for Windows.
 
 ## Your data
 
