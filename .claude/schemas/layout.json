@@ -20,6 +20,7 @@
     { "pattern": ".claude/**", "description": "Harness assets: skills, schemas, scripts, settings" },
     { "pattern": ".github/**", "description": "CI workflows and issue templates" },
     { "pattern": "docs/**", "description": "Documentation and images" },
+    { "pattern": "aranya/**", "description": "Aranya: self-contained environmental-law sub-project staged inside this repo; has its own layout, schemas and validation" },
     { "pattern": "README.md" },
     { "pattern": "CLAUDE.md" },
     { "pattern": "AGENTS.md" },

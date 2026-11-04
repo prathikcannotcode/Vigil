@@ -11,3 +11,4 @@ kpis/data/raw/sessions/**/*.json
 Thumbs.db
 *.ocsf.jsonl
 launch-kit/
+aranya/
