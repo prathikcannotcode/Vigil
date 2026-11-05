@@ -104,7 +104,8 @@ For `/audit` or a drill, with no live incident. Compare the runbook with the ste
 | Personal data assessment, recording `aware_at` | s.8(6), Rule 7 | 13 May 2027 |
 | CERT-In within 6 hours | CERT-In Directions 2022 | Today |
 | RBI within 6 hours, if a regulated entity | RBI Cybersecurity Directions 2026 | Today |
-| Board without delay, then the detailed report within 72 hours | Rule 7(2) | 13 May 2027 |
+| Board without delay, with an initial description | Rule 7(2)(a) | 13 May 2027 |
+| Board within 72 hours of becoming aware, with the detailed report | Rule 7(2)(b) | 13 May 2027 |
 | Each affected Data Principal without delay | Rule 7(1) | 13 May 2027 |
 | EU or UK supervisory authority within 72 hours, and affected people if the risk is high | GDPR Art. 33(1), 34(1) | Today |
 | Logs kept for one year, and ICT logs for 180 days in India | Rule 6(1)(e); CERT-In Directions 2022 | 13 May 2027; today |

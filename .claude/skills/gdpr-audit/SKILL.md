@@ -49,10 +49,10 @@ For special category data, verify an Art. 9(2) condition is met in addition.
 
 ### Step 4: Security and technical measures
 
-Evaluate against Art. 25 (Privacy by Design) and Art. 32 (Security):
-- Encryption at rest and in transit (Art. 32(1)(a))
+Evaluate against Art. 25 (Privacy by Design) and Art. 32 (Security), citing the Art. 32(1) limb that applies:
+- Encryption at rest and in transit, and masking of personal data in logs (Art. 32(1)(a))
 - Pseudonymisation where feasible (Art. 25(1))
-- Access controls with least privilege
+- Access controls with least privilege, and credentials kept out of source (Art. 32(1)(b))
 - Audit logging for accountability (Art. 5(2))
 - Breach detection capability (Art. 33-34)
 - Input validation and injection prevention
