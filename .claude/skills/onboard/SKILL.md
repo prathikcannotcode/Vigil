@@ -40,6 +40,8 @@ If nobody can answer (a headless run, a side session, material with gaps), take 
 | `processes_children_data`, `processes_sensitive_data` | Leave out. Never `false` as a guess |
 | `dpo` | Leave out. `null` means none is appointed |
 
+Name each field you left out in `unknowns`.
+
 ### Step 2: Create company profile
 
 Write `company-profile/{company_id}/details.json`:
@@ -56,6 +58,7 @@ Write `company-profile/{company_id}/details.json`:
   "sdf_status": "not_designated | designated | likely | unknown",
   "processes_children_data": false,
   "processes_sensitive_data": false,
+  "unknowns": [],
   "created_at": ""
 }
 ```

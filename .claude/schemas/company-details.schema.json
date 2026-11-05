@@ -26,8 +26,8 @@
       "enum": ["not_designated", "designated", "likely", "unknown"],
       "default": "unknown"
     },
-    "processes_children_data": { "type": "boolean", "default": false },
-    "processes_sensitive_data": { "type": "boolean", "default": false },
+    "processes_children_data": { "type": "boolean", "description": "Leave out if unknown" },
+    "processes_sensitive_data": { "type": "boolean", "description": "Leave out if unknown" },
     "dpo": {
       "type": ["object", "null"],
       "properties": {
@@ -36,6 +36,7 @@
         "appointed_at": { "type": "string", "format": "date" }
       }
     },
+    "unknowns": { "type": "array", "items": { "type": "string" }, "description": "Fields nobody could answer at onboarding" },
     "created_at": { "type": "string", "format": "date-time" },
     "updated_at": { "type": "string", "format": "date-time" }
   },

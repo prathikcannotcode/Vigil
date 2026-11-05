@@ -20,7 +20,7 @@
           "purpose": { "type": "string" },
           "lawful_basis": {
             "type": "string",
-            "enum": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests", "dpdp_section_7"]
+            "enum": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests", "dpdp_section_7", "none_identified"]
           },
           "source": { "type": "string", "description": "Where data is collected from" },
           "destination": { "type": "string", "description": "Where data flows to" },
@@ -29,14 +29,15 @@
             "items": { "type": "string" },
             "description": "Third-party processors involved"
           },
-          "cross_border": { "type": "boolean", "default": false },
+          "cross_border": { "type": "boolean", "description": "Leave out if unknown" },
           "transfer_mechanism": {
             "type": ["string", "null"],
             "enum": ["adequacy", "scc", "bcr", "dpf", "derogation", null]
           },
           "retention_period": { "type": "string" },
           "encryption": { "type": "boolean" },
-          "dpa_in_place": { "type": "boolean", "description": "Data Processing Agreement with processors" }
+          "dpa_in_place": { "type": "boolean", "description": "Data Processing Agreement with processors" },
+          "notes": { "type": "string", "description": "What the fields above can't hold, such as the DPDP ground or why a value is uncertain" }
         },
         "additionalProperties": false
       }
