@@ -33,7 +33,7 @@
 | F-0005 | Medium | DPDP s.8(7), Rule 8 · GDPR Art. 5(1)(e) | No deletion job; credit data has no retention period | `services/accounts/retention.py:22` |
 | F-0006 | Medium | DPDP s.6(4) · GDPR Art. 7(3) | One tap to consent, an email to withdraw | `web/src/pages/settings/privacy.tsx:31` |
 | F-0007 | Medium | GDPR Art. 28(3) | Analytics vendor has no signed DPA | data flow DF-05 |
-| F-0008 | ~~Medium~~ | DPDP s.8(5), Rule 6(1)(c) · GDPR Art. 32(1)(b) | ~~Full mobile numbers in INFO logs~~ Remediated 24 Oct | `services/notify/sms.py:57` |
+| F-0008 | ~~Medium~~ | DPDP s.8(5), Rule 6(1)(a) · GDPR Art. 32(1)(b) | ~~Full mobile numbers in INFO logs~~ Remediated 24 Oct | `services/notify/sms.py:57` |
 | F-0009 | Low | DPDP Rule 14(3) | Grievance page does not publish a response period | `web/src/pages/grievance.tsx:12` |
 
 Full detail, owners and due dates: [`report.json`](report.json).

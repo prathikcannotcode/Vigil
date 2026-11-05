@@ -23,6 +23,10 @@ Draft GDPR-compliant documents: privacy policies, Data Processing Agreements, co
 - Countries data is transferred to
 - Retention periods
 
+## Reviewing existing documents
+
+`/gdpr-draft review` checks what exists against the required contents below and drafts nothing unless asked. For each document (privacy notice, DPAs, consent notices, retention policy, rights procedure), record present, incomplete or not found. "Not found" means not found in the reviewed material, because a code repository rarely holds contracts. Findings follow `.claude/schemas/finding.schema.json`.
+
 ## Document types
 
 ### Privacy Policy / Notice
@@ -97,6 +101,7 @@ Invoke the skill directly, or describe the task in plain English and Claude pick
 
 | Run | Action |
 |---|---|
+| `/gdpr-draft review` | Check existing documents for completeness |
 | `/gdpr-draft privacy-policy` | Draft a GDPR-compliant privacy policy |
 | `/gdpr-draft dpa` | Draft a Data Processing Agreement |
 | `/gdpr-draft consent-banner` | Draft a consent notice / cookie banner |

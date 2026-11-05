@@ -52,7 +52,12 @@ For each system or service:
 
 ## Output
 
-Data flow map: a structured representation showing each flow with its lawful basis, safeguards, and gaps. Findings for gaps follow `.claude/schemas/finding.schema.json`.
+Data flow map: a structured representation showing each flow with its lawful basis, safeguards, and gaps. Save it to `company-profile/{id}/data-map.json`, and during an `/audit` also to `assessments/{assessment_id}/data-map.json`. Findings for gaps follow `.claude/schemas/finding.schema.json`.
+
+Recording a flow:
+- `lawful_basis` takes one value. For a flow under both frameworks, record the GDPR basis and put the DPDP ground (consent under s.6 or a s.7 use) in `notes`, because DPDP has no contract or legitimate-interests ground.
+- If no valid basis is evidenced, use `none_identified` and raise a finding.
+- If `cross_border`, `encryption` or `dpa_in_place` is unknown, leave it out. Write `retention_period` as `"Unknown"` or `"None defined"`; they mean different things.
 
 ## Commands
 
