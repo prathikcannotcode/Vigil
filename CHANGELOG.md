@@ -19,6 +19,7 @@
 
 ### Usability
 - `examples/acme-demo`: a synthetic app with planted problems and a list of what an audit should find. The README no longer calls the hand-written `sample-co` files real output.
+- `examples/kadamba-fit`: a second synthetic app to audit, with a key and a run sheet for a blind run and separate scoring.
 - `run-headless.mjs --target <dir>` points a headless run at a codebase. The timeout is 2 hours, up from 30 minutes, and a failed run saves its transcript.
 - `npm run kpis -- --company <id>`. KPIs count each company's latest report only.
 - `company-details` accepts the address, user count and turnover that `/onboard` asks for. `/penalty` reads the turnover.

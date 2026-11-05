@@ -1,0 +1,20 @@
+db:
+  url: ${DATABASE_URL}
+crm:
+  api_key: ${CRM_API_KEY}
+analytics:
+  in: https://ingest.ap-south-1.quantlytics.example/v2/events
+  eu: https://ingest.us-east-1.quantlytics.example/v2/events
+email:
+  in: smtp.ap-south-1.mailwren.example
+  eu: smtp.eu-west-1.mailwren.example
+partners:
+  harbourline:
+    in: https://api.in.harbourline.example/wellness
+    eu: https://api.ie.harbourline.example/wellness
+logging:
+  root: INFO
+  loggers:
+    kadamba.services: INFO
+    kadamba.jobs: INFO
+    kadamba.api.middleware: DEBUG

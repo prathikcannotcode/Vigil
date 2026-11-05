@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kadamba-api
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: kadamba-api
+  template:
+    metadata:
+      labels:
+        app: kadamba-api
+    spec:
+      containers:
+        - name: api
+          image: registry.kadamba.example/api:2026.10.2
+          env:
+            - name: APP_ENV
+              value: production
+            - name: CONFIG_PATH
+              value: /etc/kadamba/production.yaml
+            - name: CRM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kadamba-crm
+                  key: api-key
+          envFrom:
+            - secretRef:
+                name: kadamba-api

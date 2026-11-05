@@ -1,0 +1,10 @@
+CREATE TABLE tickets (
+  id BIGSERIAL PRIMARY KEY,
+  member_ref UUID NOT NULL,
+  kind TEXT NOT NULL,
+  text TEXT NOT NULL,
+  opened_at TIMESTAMPTZ NOT NULL,
+  due_at TIMESTAMPTZ NOT NULL,
+  queue TEXT NOT NULL,
+  resolved_at TIMESTAMPTZ
+);

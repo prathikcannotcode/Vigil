@@ -1,0 +1,25 @@
+<section>
+  <h2>Privacy choices</h2>
+  <label><input type="checkbox" data-purpose="wellness_partner"> Share my weekly activity tier with Harbourline Mutual</label>
+  <label><input type="checkbox" data-purpose="marketing"> Send me offers by email</label>
+  <label><input type="checkbox" data-purpose="reminders"> Send me workout reminders</label>
+</section>
+
+<section>
+  <h2>Your data</h2>
+  <a href="/me/export">Download my data</a>
+  <a href="/settings/profile">Correct my details</a>
+  <a href="/settings/nominee">Nominate someone to act for me</a>
+  <a href="/support/grievance">Raise a grievance</a>
+  <form method="post" action="/me/close"><button>Close my account</button></form>
+</section>
+
+<script>
+  document.querySelectorAll("[data-purpose]").forEach((box) => {
+    box.addEventListener("change", () => fetch(`/me/consents/${box.dataset.purpose}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ granted: box.checked }),
+    }));
+  });
+</script>

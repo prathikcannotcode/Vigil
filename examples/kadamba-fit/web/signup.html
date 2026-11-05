@@ -1,0 +1,19 @@
+<form action="/signup" method="post">
+  <select name="region" required>
+    <option value="in">India</option>
+    <option value="eu">Ireland or Germany</option>
+  </select>
+  <input name="full_name" required>
+  <input name="email" type="email" required>
+  <input name="phone" type="tel" required>
+  <input name="dob" type="date" required>
+
+  <p>Please read our <a href="/privacy-notice">privacy notice</a> before you continue.</p>
+
+  <label><input type="checkbox" name="consent_terms"> I accept the Terms of Service.</label>
+  <label><input type="checkbox" name="consent_wellness_partner"> Share my weekly activity tier (low, medium or high) with Harbourline Mutual so I can get a wellness discount on my policy.</label>
+  <label><input type="checkbox" name="consent_marketing"> Send me offers by email.</label>
+  <label><input type="checkbox" name="consent_reminders"> Send me workout reminders by push notification.</label>
+
+  <button>Create account</button>
+</form>

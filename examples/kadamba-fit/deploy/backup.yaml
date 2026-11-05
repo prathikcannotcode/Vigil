@@ -1,0 +1,10 @@
+clusters:
+  in:
+    primary: ap-south-1
+    dr_copy: ap-southeast-1
+  eu:
+    primary: eu-central-1
+    dr_copy: eu-west-1
+snapshot_every: 6h
+keep_snapshots: 35d
+encryption: per-cluster-kms
