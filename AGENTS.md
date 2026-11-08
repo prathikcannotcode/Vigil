@@ -35,6 +35,16 @@ Never store actual personal data in this repository. Findings reference file pat
 
 When a finding applies to both frameworks, note both clause references.
 
+## When something is missing or blocked
+
+A run should end with a partial result and a list of what it skipped. It should not stall.
+
+- **Nobody can answer a question** (headless run, side session, no reply): take the answer from the material you have and carry on. Never write `false`, `0` or a guess for something you don't know. Leave an optional field out and name it in the output.
+- **A schema has no value for what you found**: use the closest allowed value, say in a text field that it is a stand-in, and report the gap. Do not edit the schema.
+- **A hook blocks a write**: do not route around it through the shell or another tool. Put the content at the nearest path the layout allows, usually `assessments/{id}/`, and report the block.
+- **A skill has no mode for the step**: use its legal-basis table as the checklist and cite the clauses it lists.
+- **The only evidence is an absence**: if a document or control is merely missing from the material you were given, write "not found in the reviewed material" and rate it medium at most. Go higher when the code or a document itself shows the gap.
+
 ## Disclaimer
 
 This project provides compliance tooling and informational guidance. It does not constitute legal advice. For binding compliance decisions, consult qualified legal counsel.

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync, readFileSync, rmSync, cpSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname } from 'node:path';
+import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadLayout, matchRule, checkFile, validate, loadFindings, workspaceRoot, frontmatterErrors } from '../lib.mjs';
 
@@ -28,13 +28,20 @@ function workspace() {
   return dir;
 }
 
-// A copy of the repo's data and package.json, for scripts that read the working directory.
+// The tracked demo only. A real audit in this checkout is gitignored and must not change what these tests count.
+const DEMO_ENTRIES = ['templates', 'sample-co', '2026-10-19-sample-co-baseline'];
+const isDemoData = src => {
+  const [, entry] = relative(repo, src).split(sep);
+  return !entry || DEMO_ENTRIES.includes(entry);
+};
+
+// A copy of the repo's demo data and package.json, for scripts that read the working directory.
 function dataCopy() {
   const dir = mkdtempSync(join(tmpdir(), 'vigil-'));
   copyFileSync(join(repo, 'package.json'), join(dir, 'package.json'));
   mkdirSync(join(dir, 'kpis'));
-  cpSync(join(repo, 'assessments'), join(dir, 'assessments'), { recursive: true });
-  cpSync(join(repo, 'company-profile'), join(dir, 'company-profile'), { recursive: true });
+  cpSync(join(repo, 'assessments'), join(dir, 'assessments'), { recursive: true, filter: isDemoData });
+  cpSync(join(repo, 'company-profile'), join(dir, 'company-profile'), { recursive: true, filter: isDemoData });
   return dir;
 }
 
@@ -191,6 +198,14 @@ test('frontmatter must be valid YAML', () => {
 test('exports filter findings by company', () => {
   assert.equal(loadFindings('sample-co', repo).length, 9);
   assert.equal(loadFindings('nobody', repo).length, 0);
+});
+
+test('test data leaves out local audits', () => {
+  assert.equal(isDemoData(join(repo, 'assessments')), true);
+  assert.equal(isDemoData(join(repo, 'assessments/2026-10-19-sample-co-baseline/report.json')), true);
+  assert.equal(isDemoData(join(repo, 'company-profile/sample-co/details.json')), true);
+  assert.equal(isDemoData(join(repo, 'assessments/2026-11-05-acme-demo-full/report.json')), false);
+  assert.equal(isDemoData(join(repo, 'company-profile/acme-demo/details.json')), false);
 });
 
 test('a second audit replaces the first in exports and KPIs', () => {

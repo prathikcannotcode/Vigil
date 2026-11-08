@@ -27,6 +27,20 @@ Ask for:
 7. Is it designated as a Significant Data Fiduciary? (or likely to be)
 8. Does it process children's data?
 9. Does it process health, biometric, or other sensitive data?
+10. If financial: is it an RBI-regulated entity (bank, NBFC), a lending service provider to one, or neither?
+
+If nobody can answer (a headless run, a side session, material with gaps), take what you can from the material and carry on. Do not stop to wait. Record each gap this way:
+
+| Field | When unknown |
+|---|---|
+| `legal_name` (required) | Best known name plus "(registered legal name unknown)" |
+| `registered_address` | `"unknown"` |
+| `approx_users`, `annual_turnover_eur` | Leave out. Never `0` |
+| `sdf_status` | `"unknown"` |
+| `processes_children_data`, `processes_sensitive_data` | Leave out. Never `false` as a guess |
+| `dpo` | Leave out. `null` means none is appointed |
+
+Name each field you left out in `unknowns`.
 
 ### Step 2: Create company profile
 
@@ -41,9 +55,10 @@ Write `company-profile/{company_id}/details.json`:
   "jurisdiction": [],
   "sector": "",
   "frameworks": ["DPDP", "GDPR"],
-  "sdf_status": "not_designated | designated | likely",
+  "sdf_status": "not_designated | designated | likely | unknown",
   "processes_children_data": false,
   "processes_sensitive_data": false,
+  "unknowns": [],
   "created_at": ""
 }
 ```
@@ -53,7 +68,7 @@ Write `company-profile/{company_id}/details.json`:
 Based on the answers:
 - India data processing? -> DPDP Act + Rules
 - EU/UK data processing? -> GDPR (and/or UK GDPR)
-- Financial sector? -> Add RBI/SEBI/IRDAI obligations
+- Financial sector? -> Add `RBI`, `SEBI` or `IRDAI` to `frameworks` only for the regulator that applies. A regulated lender or its lending service provider gets `RBI`. If that is unknown, leave it out and list it as an unknown; `/audit` still runs its sector check
 - Health sector? -> Special category handling, DPIA required
 - Children's data? -> DPDP s.9 and Rule 10, GDPR Art. 8
 - SDF? -> DPO, DPIA, audit obligations
@@ -67,7 +82,7 @@ Run the posture dashboard skill with the information gathered:
 - Are there consent mechanisms?
 - Are there breach response procedures?
 
-Output: initial `posture.json` (mostly "not assessed" on first run).
+Output: initial `posture.json`. Set a dimension to `not_assessed` unless you were given evidence for it, which on a first run means most of them.
 
 ### Step 5: Recommend next steps
 
@@ -77,6 +92,7 @@ Based on gaps:
 3. If no consent mechanism: recommend consent management setup
 4. If applicable: recommend DPIA
 5. Always: recommend a full PII scan of connected codebases
+6. Always: list every unknown from Step 1, so `/audit` or a person can fill it in
 
 ## Output
 

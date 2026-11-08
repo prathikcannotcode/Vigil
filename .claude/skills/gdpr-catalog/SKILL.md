@@ -13,6 +13,8 @@ description: "Reference registry for EU GDPR, UK GDPR and the Data (Use and Acce
 
 Registry of EU GDPR and UK GDPR instruments, key articles, penalty framework, and recent regulatory developments. Reference for all GDPR skills.
 
+Last verified: 2 November 2026. Before relying on a status, check EUR-Lex, the Commission's adequacy page and legislation.gov.uk.
+
 ## Instrument Registry
 
 ### Primary legislation

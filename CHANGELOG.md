@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Skills
+Changes from the first real run of `/onboard` and `/audit`, on `examples/acme-demo`.
+- `AGENTS.md` says what to do when nobody can answer, a schema has no value, a hook blocks a write, a skill has no mode for the step, or the only evidence is an absence. A run ends with a partial result instead of a guess.
+- `/onboard` records unknowns rather than `false` or `0`, and asks whether a financial company is RBI-regulated.
+- New modes that `/audit` already assumed: `/dpdp-rights audit`, `/dpdp-breach readiness` and `/gdpr-draft review`.
+- `/audit` defines the id's `{scope}`, `law_as_at` and the coverage count, names where posture and the data map go, adds a sector check, and caps findings based only on an absence at medium.
+- `/dpdp-catalog` gains the Rule 3 and Rule 6 sub-clauses and RBI's Digital Lending Directions 2025. `/gdpr-catalog` states its last-verified date.
+- Personal data in logs is cited to Rule 6(1)(a), masking, not 6(1)(c), which covers access logs. Corrected in `sample-co` and the acme-demo key, which also accepts Rule 3(a) or 3(b) for bundled consent.
+- From the blind re-run of `/audit`: `/pii-scan` files a finding for realistic-format fixture identifiers even when a README calls them synthetic, `/dpdp-breach readiness` lists Rule 7(2)(a) and 7(2)(b) separately, and `/gdpr-audit` names the Art. 32(1) limb for logged data and credentials.
+- `npm test` counts only the tracked demo data, so a local audit no longer turns it red.
+- `company-details` gains `unknowns`, and `data-map` gains `notes` and a `none_identified` basis. Booleans in those schemas no longer default to `false`, so a missing answer stops reading as "no".
+
 ### Exports
 - OSCAL: `target-id` is now a valid token. Every finding failed NIST's 1.1.2 schema before.
 - SARIF: rules carry `fullDescription` and `help`. Findings with no file and closed findings are left out, because code scanning needs a location and would show them as live alerts. The exporter names what it left out.

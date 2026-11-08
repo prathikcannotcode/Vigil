@@ -75,7 +75,7 @@ For each finding:
 ## Guardrails
 
 - Never extract or copy actual personal data into findings. Reference by location only.
-- Flag test fixtures containing realistic PII: they should use synthetic data.
+- File a finding for test fixtures containing realistic-format identifiers (DPDP s.8(5), GDPR Art. 5(1)(f)), even when a README or comment calls them synthetic. Rate it low on that claim alone and say it was not verified. Without the claim, rate it by the risk, because the values may be real.
 - Do not treat every string as PII. Focus on structured patterns and context.
 
 ## Commands

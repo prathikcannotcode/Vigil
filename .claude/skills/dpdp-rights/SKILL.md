@@ -85,6 +85,18 @@ Track every request against its `due_at`:
 
 Flag overdue requests. Report SLA compliance to the DPO and the Board of Directors quarterly.
 
+### 7. Mechanism audit
+
+For `/audit` or a readiness check, with no live request. Look for each route in the code, docs and published site, credit what exists, and raise a finding for what doesn't. A working access endpoint is not a gap because erasure is missing. Write nothing to the rights log.
+
+| Check | DPDP | GDPR |
+|---|---|---|
+| Access route, including who the data was shared with | s.11(1), Rule 14(1) | Art. 15(1)(c) |
+| Correction and erasure routes | s.12, Rule 14(1) | Art. 16, 17 |
+| Erasure reaches processors | s.8(7) | Art. 19 |
+| Grievance route and a published response period | s.13(1), Rule 14(3) | Art. 12(2), 13(2)(d) |
+| Nomination | s.14, Rule 14(4) | None |
+
 ## Guardrails
 
 - Never refuse a valid request without recording the legal basis in `refusal_basis`.
@@ -104,3 +116,4 @@ Invoke the skill directly, or describe the task in plain English and Claude pick
 | `/dpdp-rights erase` | Process an erasure request |
 | `/dpdp-rights grievance` | Handle a grievance |
 | `/dpdp-rights sla` | Check SLA compliance for open requests |
+| `/dpdp-rights audit` | Check which rights mechanisms exist, with no live request |
