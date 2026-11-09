@@ -60,7 +60,7 @@ One blind run so far, on [`examples/kadamba-fit`](examples/kadamba-fit): a 55-fi
 | Should-not-flag items flagged anyway | 3 of 13; two were mistakes in the answer list, since corrected |
 | Fixture values copied into any output | 0 |
 
-Treat that as a floor check, not a benchmark. It is one run on synthetic code, and Claude wrote the app, ran the audit and scored it. The answer list is now public, so a fair re-run copies the app out of the repo and never opens [`examples/kadamba-fit.expected.json`](examples/kadamba-fit.expected.json) or the [run sheet](examples/kadamba-fit.run-sheet.md).
+AI can make mistakes. Have a licensed attorney check every finding before you rely on it. The answer list is now public, so a fair re-run copies the app out of the repo and never opens [`examples/kadamba-fit.expected.json`](examples/kadamba-fit.expected.json) or the [run sheet](examples/kadamba-fit.run-sheet.md).
 
 ## Why Vigil
 
@@ -272,7 +272,7 @@ Regulatory updates, sector guides and notices in more Eighth Schedule languages 
 
 ## Disclaimer
 
-Vigil provides compliance tooling and informational guidance. It does not constitute legal advice. Verify current requirements against official sources and consult qualified counsel for binding compliance decisions.
+AI can make mistakes. Vigil is compliance tooling, not legal advice. Have a licensed attorney check every finding before you rely on it.
 
 ## License
 
