@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 (9 November 2026)
+
+### Accuracy
+- First blind, separately scored run: `examples/kadamba-fit.run-1` holds the report and score. 16 of 16 planted issues found, 3 of 13 should-not-flag items flagged. The README's "How accurate is it?" section has the caveats.
 
 ### Skills
 Changes from the first real run of `/onboard` and `/audit`, on `examples/acme-demo`.
