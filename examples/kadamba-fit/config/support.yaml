@@ -1,0 +1,7 @@
+sla_hours:
+  first_response: 48
+  rights_request: 600
+  grievance_resolution: 2880
+escalation:
+  after_hours: 240
+  queue: privacy-desk

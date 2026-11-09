@@ -1,0 +1,13 @@
+sink: loki
+clusters:
+  in:
+    region: ap-south-1
+  eu:
+    region: eu-central-1
+tenants:
+  - name: api-app
+    retention: 720h
+  - name: api-access
+    retention: 720h
+  - name: auth-events
+    retention: 720h

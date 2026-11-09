@@ -1,0 +1,8 @@
+environment: staging
+databases:
+  read_write:
+    - group:engineering-all
+    - group:qa-contractors
+refresh:
+  schedule: "0 2 * * 0"
+  script: scripts/refresh_staging.sh

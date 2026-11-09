@@ -1,0 +1,14 @@
+app: kadamba-fit
+notice_version: "2026-03"
+signup:
+  min_age:
+    in: 18
+    eu: 16
+  purposes:
+    - terms
+    - wellness_partner
+    - marketing
+    - reminders
+  required_purposes:
+    - terms
+    - wellness_partner

@@ -1,0 +1,4 @@
+[
+  { "full_name": "Test Member One", "email": "member-0001@example.test", "phone": "+910000000001", "dob": "2000-01-01", "region": "in" },
+  { "full_name": "Test Member Two", "email": "member-0002@example.test", "phone": "+353000000002", "dob": "2000-01-02", "region": "eu" }
+]
