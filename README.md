@@ -47,7 +47,20 @@ That picture is **sample-co**, a made-up lending app. Its files were written by 
 - [`report.json`](assessments/2026-10-19-sample-co-baseline/report.json): 9 schema-valid findings with owners, due dates and cross-references between DPDP and GDPR
 - [`breach-log.jsonl`](company-profile/sample-co/breach-log.jsonl): an incident from detection to CERT-In (5h 25m) and the EU authority (44h 10m), one append-only line per step
 
-To watch a real run, audit [`examples/acme-demo`](examples/acme-demo), a small synthetic app with planted problems, and score the result against [the list of what it should find](examples/acme-demo.expected.json). Quick start step 5 shows how. That list is also the place to start if you want to measure Vigil's accuracy; no benchmark results are published yet.
+To watch a real run, audit [`examples/acme-demo`](examples/acme-demo), a small synthetic app with planted problems, and score the result against [the list of what it should find](examples/acme-demo.expected.json). Quick start step 5 shows how.
+
+## How accurate is it?
+
+One blind run so far, on [`examples/kadamba-fit`](examples/kadamba-fit): a 55-file synthetic fitness app whose code states none of its gaps. One session ran `/audit` without seeing the answer list, and a separate session scored it. The [score](examples/kadamba-fit.run-1/score.md):
+
+| Measure | Result |
+|---|---|
+| Planted issues found | 16 of 16 |
+| Citation anchors cited exactly | 45 of 48 |
+| Should-not-flag items flagged anyway | 3 of 13; two were mistakes in the answer list, since corrected |
+| Fixture values copied into any output | 0 |
+
+Treat that as a floor check, not a benchmark. It is one run on synthetic code, and Claude wrote the app, ran the audit and scored it. The answer list is now public, so a fair re-run copies the app out of the repo and never opens [`examples/kadamba-fit.expected.json`](examples/kadamba-fit.expected.json) or the [run sheet](examples/kadamba-fit.run-sheet.md).
 
 ## Why Vigil
 
@@ -188,7 +201,7 @@ Skills are Markdown that tell Claude what the law requires and how to check for 
 | Schema validation | `validate-on-write.mjs`, `npm run validate` | A finding without a clause or severity, a breach entry without an event, a posture with an unknown status. 9 schemas. |
 | Secrets | `write-guard.mjs` | AWS, GitHub, OpenAI and Anthropic-style keys, private keys, password assignments |
 | No personal data in findings | `write-guard.mjs`, skill rules, schema shape | Aadhaar, PAN and +91 mobile numbers in company or assessment data. Findings carry `file` and `line`, never the value found there. Other identifiers rest on the skill rules. |
-| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 23 tests, Node's built-in runner. |
+| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 24 tests, Node's built-in runner. |
 
 Known limit: hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through Bash is not intercepted, so `.claude/settings.json` only pre-approves the validate and test commands. Details in [SECURITY.md](SECURITY.md).
 
