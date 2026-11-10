@@ -68,7 +68,7 @@ test('layout matches data paths and rejects strays', () => {
 
 test('agents cannot write the guards that bind them', () => {
   const layout = loadLayout(repo);
-  for (const p of ['.claude/scripts/write-guard.mjs', '.claude/schemas/layout.json', '.claude/schemas/finding.schema.json', '.claude/settings.json', '.claude/settings.local.json']) {
+  for (const p of ['.claude/scripts/write-guard.mjs', '.claude/schemas/layout.json', '.claude/schemas/finding.schema.json', '.claude/settings.json', '.claude/settings.local.json', 'package.json', 'package-lock.json']) { // package.json: `npm test` is pre-approved, so its scripts are a guard too
     assert.equal(matchRule(layout, p), undefined, p);
   }
   assert.ok(matchRule(layout, '.claude/skills/audit/SKILL.md'));
@@ -99,6 +99,17 @@ test('report $ref validates nested findings', () => {
     findings: [{ id: 'F-0001', severity: 'high', framework: 'DPDP', issue: 'x', recommendation: 'y' }],
   }));
   assert.match(checkFile('assessments/a1/report.json', dir).join(), /findings\[0\]: missing required "clause"/);
+  rmSync(dir, { recursive: true });
+});
+
+test('another spelling of a guarded path is still guarded', { skip: !existsSync(join(repo, 'PACKAGE.JSON')) && 'case-sensitive disk' }, () => {
+  const dir = workspace();
+  const log = 'company-profile/acme/BREACH-LOG.jsonl';
+  const r = run('write-guard.mjs', { cwd: dir, input: { tool_name: 'Write', tool_input: { file_path: log, content: '{"b":2}\n' } } });
+  assert.equal(r.status, 2);
+  assert.match(r.stderr, /append-only/);
+  const post = run('validate-on-write.mjs', { cwd: dir, input: { tool_input: { file_path: log } } });
+  assert.equal(post.status, 2, 'the schema still applies');
   rmSync(dir, { recursive: true });
 });
 
