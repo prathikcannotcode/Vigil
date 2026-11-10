@@ -13,7 +13,7 @@
 
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, relative, isAbsolute } from 'node:path';
-import { loadLayout, matchRule, workspaceRoot } from './lib.mjs';
+import { loadLayout, matchRule, workspaceRoot, realPath } from './lib.mjs';
 
 const SECRET_PATTERNS = [
   /(?:api[_-]?key|apikey)["']?\s*[:=]\s*["']?[A-Za-z0-9_\-]{20,}/i,
@@ -77,9 +77,9 @@ function guard(event) {
   // The event's cwd follows Claude; the others cover a cwd this platform can't read.
   const start = [event.cwd, process.cwd(), process.env.CLAUDE_PROJECT_DIR].find(dir => dir && workspaceRoot(dir));
   if (!start) block('no workspace layout found at or above the working directory');
-  const root = workspaceRoot(start);
+  const root = realPath(workspaceRoot(start));
 
-  const abs = resolve(start, filePath);
+  const abs = realPath(resolve(start, filePath));
   const rel = relative(root, abs).replace(/\\/g, '/');
   if (rel === '..' || rel.startsWith('../') || isAbsolute(rel)) block(`path outside workspace: ${filePath}`);
 

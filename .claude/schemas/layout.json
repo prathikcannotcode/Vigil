@@ -29,8 +29,6 @@
     { "pattern": "CHANGELOG.md" },
     { "pattern": "CITATION.cff" },
     { "pattern": "LICENSE" },
-    { "pattern": "package.json" },
-    { "pattern": "package-lock.json" },
     { "pattern": ".gitignore" },
     { "pattern": ".gitattributes" },
     { "pattern": ".editorconfig" }
