@@ -101,6 +101,18 @@ You need [Node.js 22+](https://nodejs.org) and [Claude Code](https://claude.com/
 
 Delete `company-profile/sample-co/` and `assessments/2026-10-19-sample-co-baseline/` whenever you like.
 
+### Or install the skills as a plugin
+
+```bash
+claude plugin marketplace add prathikcannotcode/Vigil
+```
+
+```bash
+claude plugin install vigil@prathikcannotcode
+```
+
+The plugin carries the 20 skills, namespaced as `/vigil:audit`, `/vigil:dpdp-consent` and so on, and they work in any project. It carries no hooks. The write guard, schema validation and the SARIF, OSCAL and OCSF exporters run only inside a Vigil workspace, so clone the repo when you need them.
+
 ## Skills
 
 Every skill is a real slash command. You can also describe the task in plain English and Claude picks the right one.
