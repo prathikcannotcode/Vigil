@@ -40,7 +40,8 @@ function isAadhaar(digits) {
 
 function hasPersonalData(text) {
   const aadhaar = [...text.matchAll(/\b[2-9]\d{3}[ -]?\d{4}[ -]?\d{4}\b/g)].some(m => isAadhaar(m[0].replace(/\D/g, '')));
-  return aadhaar || /\b[A-Z]{3}[ABCFGHJLPT][A-Z]\d{4}[A-Z]\b/.test(text) || /\+91[ -]?[6-9]\d{9}\b/.test(text);
+  // Mobiles are often written 5+5, as in +91 98765 43210.
+  return aadhaar || /\b[A-Z]{3}[ABCFGHJLPT][A-Z]\d{4}[A-Z]\b/i.test(text) || /\+91[ -]?[6-9]\d{4}[ -]?\d{5}\b/.test(text);
 }
 
 function block(reason) {

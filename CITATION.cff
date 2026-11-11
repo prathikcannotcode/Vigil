@@ -6,8 +6,8 @@ authors:
   - name: "Vigil contributors"
 repository-code: "https://github.com/prathikcannotcode/Vigil"
 license: Apache-2.0
-version: 0.3.1
-date-released: 2026-11-09
+version: 0.4.0
+date-released: 2026-11-11
 keywords:
   - dpdp
   - gdpr

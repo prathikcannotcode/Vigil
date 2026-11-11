@@ -1,7 +1,7 @@
 {
   "name": "vigil",
   "displayName": "Vigil",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "DPDP Act and GDPR compliance skills for Claude Code: 20 skills that audit code and cite the exact section, rule or article. Skills only; the write guards and exporters need a Vigil workspace.",
   "author": {
     "name": "Vigil contributors",
