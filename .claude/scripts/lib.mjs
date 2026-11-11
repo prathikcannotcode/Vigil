@@ -142,6 +142,38 @@ export function validate(schema, value, at = '$', root = process.cwd(), errors =
   return errors;
 }
 
+// ---------------------------------------------------------------------------
+// Clause references
+// shortcut: checks that each cited section, rule or article number exists in the finding's
+// own framework. It does not check sub-clauses, cross_reference or whether the clause applies.
+
+const ACT = [44, 'the DPDP Act has sections 1-44'];
+const RULES = [23, 'the DPDP Rules have rules 1-23'];
+const GDPR = [99, 'the GDPR has articles 1-99'];
+const CLAUSE_FORMS = {
+  DPDP: [{ 's.': ACT, 'ss.': ACT, Section: ACT, Sections: ACT, Rule: RULES, Rules: RULES }, '"s.8(5)" or "Rule 6(1)(a)"'],
+  GDPR: [{ 'Art.': GDPR, 'Arts.': GDPR, Article: GDPR, Articles: GDPR }, '"Art. 32(1)(a)"'],
+};
+CLAUSE_FORMS['UK-GDPR'] = CLAUSE_FORMS.GDPR;
+const SUB = String.raw`(?:\((?:\d+[A-Z]?|[a-z]{1,4})\))*`;
+const REF = new RegExp(String.raw`^([A-Za-z.]+) ?(\d+)([A-Z]?)${SUB}(?: ?[-–] ?(\d+)([A-Z]?)${SUB})?$`);
+
+/** Problems with a finding's `clause`: every comma- or semicolon-separated reference must exist in its framework. */
+export function clauseErrors(finding, at = '$') {
+  const [forms, example] = CLAUSE_FORMS[finding?.framework] ?? [];
+  if (!forms || typeof finding.clause !== 'string') return []; // the schema reports these
+  const refs = finding.clause.split(/[,;]/).map(s => s.trim()).filter(Boolean);
+  if (!refs.length) return [`${at}.clause: names no reference`];
+  return refs.flatMap(ref => {
+    const [, prefix, from, letter, to, toLetter] = ref.match(REF) ?? [];
+    const form = forms[prefix];
+    if (!form) return [`${at}.clause: "${ref}" is not a ${finding.framework} reference like ${example}. Cite other instruments in cross_reference.`];
+    if ([from, to].some(n => n !== undefined && (n < 1 || n > form[0]))) return [`${at}.clause: "${ref}" does not exist: ${form[1]}`];
+    if ((letter || toLetter) && finding.framework !== 'UK-GDPR') return [`${at}.clause: "${ref}" does not exist: only UK GDPR has lettered articles`];
+    return [];
+  });
+}
+
 /** Parses a .json/.jsonl file and validates it against the schema its layout rule names. */
 export function checkFile(relPath, root = process.cwd(), layout = loadLayout(root)) {
   const ext = extname(relPath);
@@ -164,7 +196,10 @@ export function checkFile(relPath, root = process.cwd(), layout = loadLayout(roo
   const rule = matchRule(layout, relPath);
   if (!rule?.schema) return [];
   const schema = loadSchema(rule.schema, root);
-  return records.flatMap(([at, value]) => validate(schema, value, at, root));
+  return records.flatMap(([at, value]) => [
+    ...validate(schema, value, at, root),
+    ...(rule.schema === 'report.schema.json' && Array.isArray(value?.findings) ? value.findings.flatMap((f, i) => clauseErrors(f, `${at}.findings[${i}]`)) : []),
+  ]);
 }
 
 // ---------------------------------------------------------------------------
