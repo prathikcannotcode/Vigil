@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+Changes from a review of commit 731a3f9 that used synthetic data only.
+
+### Guardrails
+- The write-guard blocks a hook event it cannot read: invalid JSON, no `tool_name` or `tool_input`, or a file tool with no path. It allowed all of these before.
+- NotebookEdit goes through the write-guard. It could write a notebook anywhere before.
+- Every reference in a finding's `clause` must name a DPDP section (1-44) or rule (1-23), or a GDPR article (1-99), in the finding's own framework. "Section 999 of the Imaginary Act" passed before. Sub-clauses and `cross_reference` are still unchecked.
+- The post-write validator reports a hook event it cannot read instead of skipping it.
+- The schema-validation test runs on a copy of the tracked demo, so a local audit can't turn `npm test` red.
+
+### Docs
+- `SECURITY.md` lists what the guards do not cover: shell and MCP writes, identifiers other than Aadhaar, PAN and +91 mobiles, what a clause means or whether it applies, and sector rules.
+- A sector-only duty, such as CERT-In's 6-hour report, goes in the assessment summary instead of a DPDP finding standing in for it. `AGENTS.md`, `/audit` and the three sector guides say so, and the guides say sector counsel has not reviewed them.
+
+### Plugin
 - Vigil installs as a Claude Code plugin: `.claude-plugin/plugin.json` and a marketplace file. Skills only. The hooks stay in the workspace, because a plugin-wide write guard would block every edit in a project with no layout.
 
 ## 0.3.1 (9 November 2026)

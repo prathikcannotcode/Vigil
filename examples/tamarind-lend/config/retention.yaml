@@ -1,0 +1,4 @@
+# Read by jobs/retention.py as settings.retention
+kyc_after_closure_days: 365
+rejected_application_days: 90
+device_locations_days: 90

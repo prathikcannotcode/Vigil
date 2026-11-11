@@ -1,0 +1,9 @@
+grievance:
+  officer: grievance@tamarind.example
+  acknowledge_hours: 24
+  resolve_days: 30
+  escalation_note: "If we have not resolved your complaint within 30 days, or you are not satisfied with our reply, you can complain to the RBI Ombudsman at cms.rbi.org.in."
+
+rights_requests:
+  channel: privacy@tamarind.example
+  resolve_days: 30

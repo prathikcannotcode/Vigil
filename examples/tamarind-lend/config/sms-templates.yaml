@@ -1,0 +1,3 @@
+emi_overdue: "Your Tamarind EMI of Rs {amount} for loan {loan_id} is {dpd} days overdue. Pay in the app or call 020-0000-0000."
+reference_nudge: "{borrower_name} gave your number to Tamarind. Please ask them to call us at 020-0000-0000 about their account."
+topup_offer: "You are pre-approved for a Tamarind top-up of up to Rs {limit}. Open the app to apply."

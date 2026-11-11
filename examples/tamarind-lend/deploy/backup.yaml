@@ -1,0 +1,27 @@
+database: tamarind-core
+engine: postgres-16
+
+snapshots:
+  every: 6h
+  keep: 35d
+  region: ap-south-1
+  encryption: kms
+
+replicas:
+  - region: ap-south-2
+    mode: streaming
+    purpose: failover
+
+cross_region_copy:
+  enabled: true
+  region: ap-southeast-1
+  schedule: "daily 02:30 Asia/Kolkata"
+  keep: 35d
+  encryption: kms
+  purpose: disaster recovery if both India regions are lost
+
+object_storage:
+  bucket: tamarind-kyc-docs
+  region: ap-south-1
+  versioning: true
+  replication: ap-south-2

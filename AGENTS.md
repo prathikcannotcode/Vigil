@@ -20,7 +20,7 @@ Only write files matching the paths defined in `.claude/schemas/layout.json`. A 
 
 Every compliance finding must:
 - Follow `.claude/schemas/finding.schema.json`
-- Cite the specific regulatory clause (DPDP section number or GDPR article)
+- Cite the specific regulatory clause in `clause`: DPDP sections and rules or GDPR articles, separated by commas, such as `s.8(5), Rule 6(1)(a)` or `Art. 32(1)(a)`. The validator rejects a number the framework doesn't have. Other instruments (CERT-In, RBI, SEBI) go in `cross_reference`, which nothing checks.
 - Have a severity level (critical / high / medium / low)
 - Include a concrete recommendation
 
@@ -40,7 +40,7 @@ When a finding applies to both frameworks, note both clause references.
 A run should end with a partial result and a list of what it skipped. It should not stall.
 
 - **Nobody can answer a question** (headless run, side session, no reply): take the answer from the material you have and carry on. Never write `false`, `0` or a guess for something you don't know. Leave an optional field out and name it in the output.
-- **A schema has no value for what you found**: use the closest allowed value, say in a text field that it is a stand-in, and report the gap. Do not edit the schema.
+- **A schema has no value for what you found**: use the closest allowed value, say in a text field that it is a stand-in, and report the gap. Do not edit the schema. Findings are the exception: a duty that only CERT-In, RBI or another sector rule imposes goes in the assessment summary, not `report.json`. A DPDP finding standing in for it reads as a DPDP gap it isn't.
 - **A hook blocks a write**: do not route around it through the shell or another tool. Put the content at the nearest path the layout allows, usually `assessments/{id}/`, and report the block.
 - **A skill has no mode for the step**: use its legal-basis table as the checklist and cite the clauses it lists.
 - **The only evidence is an absence**: if a document or control is merely missing from the material you were given, write "not found in the reviewed material" and rate it medium at most. Go higher when the code or a document itself shows the gap.

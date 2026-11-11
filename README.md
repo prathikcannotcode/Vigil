@@ -67,7 +67,7 @@ AI can make mistakes. Have a licensed attorney check every finding before you re
 | | Spreadsheet checklist | Hosted privacy platform | **Vigil** |
 |---|---|---|---|
 | Looks at your code, schemas and logs | No | Usually through integrations | **Yes. It runs in your repo.** |
-| Cites the DPDP section or rule per finding | If someone typed it in | Varies | **Every finding. The schema rejects one without a clause.** |
+| Cites the DPDP section or rule per finding | If someone typed it in | Varies | **Every finding. Validation rejects a missing clause, or a section the law doesn't have.** |
 | Knows what is in force on which date | No | Varies | **Phased commencement table, checked before a gap is called a breach** |
 | Where your data goes | Wherever the sheet lives | The vendor's cloud | **Your machine and your model provider. No Vigil server.** |
 | Output | Cells | Dashboards | **JSON, Markdown, SARIF, OSCAL, OCSF** |
@@ -202,20 +202,21 @@ flowchart LR
     exp --> ocsf["OCSF: SIEM"]
 ```
 
-Skills are Markdown that tell Claude what the law requires and how to check for it. Everything Claude writes passes through two hooks, and everything it writes must match a JSON Schema. The agent can be wrong about the law. It cannot quietly write a finding without a clause, rewrite a breach log, or drop a file outside the workspace.
+Skills are Markdown that tell Claude what the law requires and how to check for it. Everything Claude writes with its file tools passes through two hooks and must match a JSON Schema. The agent can be wrong about the law. Through those tools it cannot write a finding that cites a section the law doesn't have, rewrite a breach log, or drop a file outside the workspace. A shell command skips the hooks, which is why the shell stays behind a permission prompt.
 
 ## Guardrails
 
 | Guard | Enforced by | What it stops |
 |---|---|---|
-| Workspace layout | `write-guard.mjs` reading [`layout.json`](.claude/schemas/layout.json) | Writes to any path the layout does not list, path traversal out of the repo, and edits to the hooks, schemas and settings themselves |
+| Workspace layout | `write-guard.mjs` reading [`layout.json`](.claude/schemas/layout.json) | Writes to any path the layout does not list, path traversal out of the repo, edits to the hooks, schemas and settings themselves, and hook events it cannot read |
 | Append-only logs | `write-guard.mjs` | Any write to `breach-log.jsonl` or `rights-log.jsonl` whose result does not start with the existing file. Corrections are new lines. |
 | Schema validation | `validate-on-write.mjs`, `npm run validate` | A finding without a clause or severity, a breach entry without an event, a posture with an unknown status. 9 schemas. |
+| Clause numbers | The same two | A `clause` naming a section, rule or article its framework doesn't have, or another instrument entirely. Sub-clauses and `cross_reference` are not checked. |
 | Secrets | `write-guard.mjs` | AWS, GitHub, OpenAI and Anthropic-style keys, private keys, password assignments |
-| No personal data in findings | `write-guard.mjs`, skill rules, schema shape | Aadhaar, PAN and +91 mobile numbers in company or assessment data. Findings carry `file` and `line`, never the value found there. Other identifiers rest on the skill rules. |
-| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 24 tests, Node's built-in runner. |
+| No personal data in findings | `write-guard.mjs`, skill rules, schema shape | Aadhaar, PAN and +91 mobile numbers in company or assessment data. Findings carry `file` and `line`, never the value found there. Emails, dates of birth, card and account numbers and health data pass the hook and rest on the skill rules. |
+| Tests | `npm test`, GitHub Actions | Regressions in all of the above. 27 tests, Node's built-in runner. |
 
-Known limit: hooks guard Claude Code's Write, Edit and MultiEdit tools. A shell command run through Bash is not intercepted, so `.claude/settings.json` only pre-approves the validate and test commands. Details in [SECURITY.md](SECURITY.md).
+These guards catch an agent's mistakes in Claude Code's file tools. They are not a security boundary. A shell command through Bash is not intercepted, so `.claude/settings.json` pre-approves only the validate and test commands. The personal-data filter knows three formats, and a clause that passes is well formed, not legally checked. [SECURITY.md](SECURITY.md) lists every limit.
 
 Your own company profiles and assessments are gitignored by default; only the synthetic demo is tracked. Use `git add -f` if you do want them in a private fork.
 
@@ -252,9 +253,9 @@ Last verified **2 November 2026**. Dates and clauses trace to the Gazette of Ind
 | DPDP Rules 2025 | All 23 rules, with their phased commencement dates (13 Nov 2025, 13 Nov 2026, 13 May 2027) |
 | EU GDPR | Principles, lawful bases, rights, controller and processor duties, breaches, DPIAs, transfers, Art. 83 penalties, recent CJEU and EDPB developments |
 | UK GDPR + DUAA 2025 | Recognised legitimate interests, Art. 22A-22D, the transfer "data protection test", complaints handling, PECR changes |
-| Indian sector rules | CERT-In Directions 2022, RBI Cybersecurity Directions 2026, SEBI CSCRF, IRDAI guidelines, CCPA Dark Patterns Guidelines 2023 |
+| Indian sector rules | CERT-In Directions 2022, RBI Cybersecurity Directions 2026, SEBI CSCRF, IRDAI guidelines, CCPA Dark Patterns Guidelines 2023, as context only. They appear in `cross_reference` and the sector guides, and nothing validates them. |
 
-Plus 7 consent notice templates (including Hindi) in [`examples/consent-notices`](examples/consent-notices) and sector guides for [fintech](examples/sector-guides/fintech-banking.md), [healthtech](examples/sector-guides/healthtech-healthcare.md) and [edtech](examples/sector-guides/edtech-education.md).
+Plus 7 consent notice templates (including Hindi) in [`examples/consent-notices`](examples/consent-notices) and sector guides for [fintech](examples/sector-guides/fintech-banking.md), [healthtech](examples/sector-guides/healthtech-healthcare.md) and [edtech](examples/sector-guides/edtech-education.md). Sector counsel has not reviewed the guides, and no test yet measures how well an audit finds sector-specific gaps.
 
 ## What's in the repo
 

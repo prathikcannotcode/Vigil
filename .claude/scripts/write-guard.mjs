@@ -7,8 +7,9 @@
  * 3. Content containing secret-shaped strings (API keys, passwords, tokens)
  * 4. Identifiers in company or assessment data (Aadhaar, PAN, +91 mobile numbers)
  *
- * Used as a PreToolUse hook on Write, Edit and MultiEdit.
- * Reads the event from stdin, exits 2 to block with a message.
+ * Used as a PreToolUse hook on Write, Edit, MultiEdit and NotebookEdit.
+ * Reads the event from stdin, exits 2 to block with a message. An event it
+ * cannot read blocks too. Shell commands never reach it: see SECURITY.md.
  */
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -53,9 +54,12 @@ function editsOf(input) {
   return [];
 }
 
+const FILE_TOOLS = new Set(['Write', 'Edit', 'MultiEdit', 'NotebookEdit']);
+
 // The file content after the tool runs, so append-only checks see the real result.
+// Anything that is not an edit counts as a full replacement, so an unfamiliar tool can't slip past the append-only check.
 function contentAfter(before, toolName, input) {
-  if (toolName === 'Write') return input.content ?? '';
+  if (toolName !== 'Edit' && toolName !== 'MultiEdit') return input.content ?? input.new_source ?? '';
   let text = before;
   for (const { old_string: from, new_string: to, replace_all } of editsOf(input)) {
     if (replace_all) text = text.split(from).join(to);
@@ -70,9 +74,12 @@ function contentAfter(before, toolName, input) {
 const lf = text => text.replace(/\r\n/g, '\n');
 
 function guard(event) {
-  const input = event.tool_input ?? {};
-  const filePath = input.file_path;
-  if (!filePath) return;
+  const input = event?.tool_input;
+  if (typeof event?.tool_name !== 'string' || !input || typeof input !== 'object') block('malformed hook event: no tool_name or tool_input');
+  const filePath = input.file_path ?? input.notebook_path;
+  // A matcher like "Write" may also catch a tool that writes no file, such as TodoWrite.
+  if (filePath === undefined && !FILE_TOOLS.has(event.tool_name)) return;
+  if (typeof filePath !== 'string' || !filePath) block(`${event.tool_name} event names no file path`);
 
   // The event's cwd follows Claude; the others cover a cwd this platform can't read.
   const start = [event.cwd, process.cwd(), process.env.CLAUDE_PROJECT_DIR].find(dir => dir && workspaceRoot(dir));
@@ -93,10 +100,12 @@ function guard(event) {
     }
   }
 
-  const content = [input.content, ...editsOf(input).map(e => e.new_string)].filter(Boolean).join('\n');
+  const content = [input.content, input.new_source, ...editsOf(input).map(e => e.new_string)].filter(Boolean).join('\n');
   if (SECRET_PATTERNS.some(p => p.test(content))) {
     block('content looks like it contains a secret (API key, password, or token). Store secrets in environment variables or encrypted references.');
   }
+  // shortcut: three Indian formats with low false-positive rates. Emails and dates look like legitimate profile
+  // data and pass; card and ABHA numbers have their own shape but are not covered yet. See SECURITY.md.
   if (/^(company-profile|assessments)\//.test(rel) && hasPersonalData(content)) {
     block('content looks like it contains personal data (Aadhaar, PAN or a +91 mobile number). Reference it by file and line instead.');
   }
@@ -106,12 +115,8 @@ let raw = '';
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', chunk => { raw += chunk; });
 process.stdin.on('end', () => {
-  let event;
-  try { event = JSON.parse(raw); }
-  catch { process.exit(0); } // not a tool event we understand; nothing to guard
-
-  // Only exit 2 blocks, so an unexpected error here must not let the write through.
-  try { guard(event); }
+  // Only exit 2 blocks, so unreadable input or an unexpected error must not let the write through.
+  try { guard(JSON.parse(raw)); }
   catch (e) { block(`guard error: ${e.message}`); }
   process.exit(0);
 });

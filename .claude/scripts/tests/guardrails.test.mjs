@@ -5,14 +5,14 @@ import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync, readFileSync, rmSy
 import { tmpdir } from 'node:os';
 import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadLayout, matchRule, checkFile, validate, loadFindings, workspaceRoot, frontmatterErrors } from '../lib.mjs';
+import { loadLayout, matchRule, checkFile, validate, clauseErrors, loadFindings, workspaceRoot, frontmatterErrors } from '../lib.mjs';
 
 const scripts = join(dirname(fileURLToPath(import.meta.url)), '..');
 const repo = join(scripts, '..', '..');
 
 function run(script, { cwd = repo, input, args = [] } = {}) {
   return spawnSync(process.execPath, [join(scripts, script), ...args], {
-    cwd, input: input && JSON.stringify(input), encoding: 'utf8',
+    cwd, input: typeof input === 'string' ? input : input && JSON.stringify(input), encoding: 'utf8',
   });
 }
 
@@ -54,8 +54,11 @@ function secondAudit(dir) {
 }
 
 test('sample workspace passes schema validation', () => {
-  const r = run('validate.mjs', { args: ['--strict'] });
+  const dir = dataCopy();
+  for (const d of ['.claude/schemas', '.claude/skills']) cpSync(join(repo, d), join(dir, d), { recursive: true });
+  const r = run('validate.mjs', { cwd: dir, args: ['--strict'] });
   assert.equal(r.status, 0, r.stderr);
+  rmSync(dir, { recursive: true });
 });
 
 test('layout matches data paths and rejects strays', () => {
@@ -91,6 +94,21 @@ test('finding file paths must be relative to the audited codebase', () => {
   }
 });
 
+test('a clause must name a section, rule or article its framework has', () => {
+  const errors = (framework, clause) => clauseErrors({ framework, clause });
+  for (const clause of ['s.8(5), Rule 6(1)(a)', 'Section 10(2)(c)(i); Rule 13(1)', 'ss.11-14', 'Rule 3(c)(i)']) assert.deepEqual(errors('DPDP', clause), [], clause);
+  for (const clause of ['Art. 32(1)(a), Art. 5(1)(f)', 'Art. 6(1)(ea)', 'Art. 44-49']) assert.deepEqual(errors('GDPR', clause), [], clause);
+  assert.deepEqual(errors('UK-GDPR', 'Art. 22A-22D'), []);
+  assert.match(errors('DPDP', 'Section 999 of the Imaginary Act').join(), /not a DPDP reference/);
+  assert.match(errors('DPDP', 'Section 999').join(), /sections 1-44/);
+  assert.match(errors('DPDP', 'Rule 24').join(), /rules 1-23/);
+  assert.match(errors('GDPR', 'Art. 100').join(), /articles 1-99/);
+  assert.match(errors('GDPR', 'Art. 22A').join(), /only UK GDPR/);
+  assert.match(errors('GDPR', 's.8(5)').join(), /not a GDPR reference/);
+  assert.match(errors('DPDP', 'CERT-In Directions 2022').join(), /cross_reference/, 'a sector instrument is not a DPDP clause');
+  assert.match(errors('DPDP', ' ').join(), /names no reference/);
+});
+
 test('report $ref validates nested findings', () => {
   const dir = workspace();
   mkdirSync(join(dir, 'assessments/a1'), { recursive: true });
@@ -99,6 +117,11 @@ test('report $ref validates nested findings', () => {
     findings: [{ id: 'F-0001', severity: 'high', framework: 'DPDP', issue: 'x', recommendation: 'y' }],
   }));
   assert.match(checkFile('assessments/a1/report.json', dir).join(), /findings\[0\]: missing required "clause"/);
+  writeFileSync(join(dir, 'assessments/a1/report.json'), JSON.stringify({
+    assessment_id: 'a1', company_id: 'acme', scope: ['DPDP'], started_at: '2026-10-19T10:00:00Z',
+    findings: [{ id: 'F-0001', severity: 'high', framework: 'DPDP', clause: 'Section 999 of the Imaginary Act', issue: 'x', recommendation: 'y' }],
+  }));
+  assert.match(checkFile('assessments/a1/report.json', dir).join(), /findings\[0\]\.clause: "Section 999 of the Imaginary Act" is not a DPDP reference/);
   rmSync(dir, { recursive: true });
 });
 
@@ -180,6 +203,19 @@ test('hooks find the workspace from a subdirectory and block with exit 2', () =>
   rmSync(dir, { recursive: true });
 });
 
+test('write-guard fails closed on events it cannot read', () => {
+  const dir = workspace();
+  const guard = input => run('write-guard.mjs', { cwd: dir, input }).status;
+  for (const input of ['', 'not json', 'null', '{}', { tool_name: 'Write' }, { tool_name: 'Write', tool_input: {} }, { tool_name: 'Edit', tool_input: { file_path: '' } }]) {
+    assert.equal(guard(input), 2, JSON.stringify(input));
+  }
+  assert.equal(guard({ tool_name: 'TodoWrite', tool_input: { todos: [] } }), 0, 'a tool that writes no file, caught by a loose matcher');
+  assert.equal(guard({ tool_name: 'NotebookEdit', tool_input: { notebook_path: 'src/x.ipynb', new_source: 'x' } }), 2);
+  assert.equal(guard({ tool_name: 'NotebookEdit', tool_input: { notebook_path: 'company-profile/acme/breach-log.jsonl', new_source: '{"c":3}' } }), 2);
+  assert.equal(guard({ tool_name: 'NotebookEdit', tool_input: { notebook_path: 'docs/x.ipynb', new_source: 'x' } }), 0);
+  rmSync(dir, { recursive: true });
+});
+
 test('write-guard fails closed when the layout is broken', () => {
   const dir = workspace();
   writeFileSync(join(dir, '.claude/schemas/layout.json'), '{ not json');
@@ -194,6 +230,7 @@ test('validate-on-write exits 2 so the agent sees schema errors', () => {
   const r = run('validate-on-write.mjs', { cwd: dir, input: { tool_input: { file_path: 'company-profile/acme/breach-log.jsonl' } } });
   assert.equal(r.status, 2);
   assert.match(r.stderr, /missing required "event"/);
+  assert.equal(run('validate-on-write.mjs', { cwd: dir, input: 'not json' }).status, 2, 'an unreadable event must not pass silently');
   rmSync(dir, { recursive: true });
 });
 

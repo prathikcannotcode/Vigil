@@ -26,7 +26,7 @@ Run a complete privacy compliance audit covering both DPDP and GDPR. Orchestrate
 4. **Rights mechanisms** (`/dpdp-rights audit`): verify grievance and rights request mechanisms.
 5. **DPIA check** (`/dpdp-dpia screen`): determine if a DPIA is needed. If it is, write a `draft` with `/dpdp-dpia full`.
 6. **Breach readiness** (`/dpdp-breach readiness`): compare the runbook with the required steps.
-7. **Sector check**: if `details.json` lists `RBI`, `SEBI` or `IRDAI`, or the company is financial and its regulated status is unknown, check the matching rows of `/dpdp-catalog` under "Related Indian instruments". File a finding under the closest DPDP clause, name the instrument in `cross_reference`, and say whether it applies or only might.
+7. **Sector check**: if `details.json` lists `RBI`, `SEBI` or `IRDAI`, or the company is financial and its regulated status is unknown, check the matching rows of `/dpdp-catalog` under "Related Indian instruments". File a finding under the DPDP clause that carries the same duty, name the instrument in `cross_reference`, and say whether it applies or only might. When no DPDP clause carries it (CERT-In's 6-hour report runs on its own clock), list it under "Sector obligations" in `summary.md` instead. The validator rejects a `clause` that is not a DPDP or GDPR reference.
 
 ### Phase 3: GDPR assessment
 
