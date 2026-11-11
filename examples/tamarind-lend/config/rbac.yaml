@@ -1,0 +1,22 @@
+# Roles on the operations console (ops.tamarind.example). SSO for staff; partner users get
+# named accounts provisioned by the vendor manager.
+roles:
+  support_agent:
+    grants: [borrower:read, loan:read]
+    scope: assigned_tickets
+
+  credit_analyst:
+    grants: [borrower:read, application:read, kyc_documents:read, bank_statements:read]
+    scope: assigned_applications
+
+  collections_inhouse:
+    grants: [borrower:read, loan:read, field_plan:read]
+    scope: assigned_accounts
+
+  collections_partner:
+    grants: [borrower:read, loan:read, kyc_documents:read, bank_statements:read, contact_graph:read]
+    scope: overdue_accounts
+
+  risk_admin:
+    grants: ["*"]
+    scope: all

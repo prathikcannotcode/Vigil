@@ -1,0 +1,23 @@
+sink: opensearch
+region: ap-south-1
+time_source: ntp.tamarind.internal   # stratum 2, synced to the NPL and NIC servers
+
+streams:
+  - name: api-access
+    level: INFO
+    retention: 400d
+  - name: api-app
+    level: INFO
+    retention: 400d
+  - name: auth-events
+    level: INFO
+    retention: 400d
+  - name: console-audit
+    level: INFO
+    retention: 400d
+
+readers:
+  - group: engineering
+    streams: [api-access, api-app]
+  - group: security
+    streams: ["*"]
