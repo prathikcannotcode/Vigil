@@ -1,0 +1,14 @@
+{
+  "name": "prathikcannotcode",
+  "owner": {
+    "name": "Vigil contributors",
+    "url": "https://github.com/prathikcannotcode/Vigil"
+  },
+  "plugins": [
+    {
+      "name": "vigil",
+      "source": "./",
+      "description": "DPDP Act and GDPR compliance skills for Claude Code"
+    }
+  ]
+}

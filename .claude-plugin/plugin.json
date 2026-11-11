@@ -1,0 +1,15 @@
+{
+  "name": "vigil",
+  "displayName": "Vigil",
+  "version": "0.3.1",
+  "description": "DPDP Act and GDPR compliance skills for Claude Code: 20 skills that audit code and cite the exact section, rule or article. Skills only; the write guards and exporters need a Vigil workspace.",
+  "author": {
+    "name": "Vigil contributors",
+    "url": "https://github.com/prathikcannotcode/Vigil"
+  },
+  "homepage": "https://github.com/prathikcannotcode/Vigil#readme",
+  "repository": "https://github.com/prathikcannotcode/Vigil",
+  "license": "Apache-2.0",
+  "keywords": ["dpdp", "gdpr", "privacy", "compliance", "data-protection", "india"],
+  "skills": "./.claude/skills/"
+}

@@ -15,6 +15,9 @@ Changes from a review of commit 731a3f9 that used synthetic data only.
 - `SECURITY.md` lists what the guards do not cover: shell and MCP writes, identifiers other than Aadhaar, PAN and +91 mobiles, what a clause means or whether it applies, and sector rules.
 - A sector-only duty, such as CERT-In's 6-hour report, goes in the assessment summary instead of a DPDP finding standing in for it. `AGENTS.md`, `/audit` and the three sector guides say so, and the guides say sector counsel has not reviewed them.
 
+### Plugin
+- Vigil installs as a Claude Code plugin: `.claude-plugin/plugin.json` and a marketplace file. Skills only. The hooks stay in the workspace, because a plugin-wide write guard would block every edit in a project with no layout.
+
 ## 0.3.1 (9 November 2026)
 
 - The README and disclaimer say it once and plainly: AI can make mistakes, and a licensed attorney should check every finding before you rely on it.
