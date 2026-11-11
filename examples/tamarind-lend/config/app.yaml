@@ -1,0 +1,22 @@
+service: tamarind-api
+region: ap-south-1
+
+eligibility:
+  countries: [IN]
+  min_age: 21
+  max_age: 58
+  requires: [pan, indian_address, salaried]
+
+signup:
+  consents:
+    - purpose: credit_assessment
+      required: true
+      text: "I agree that Tamarind may check my identity, credit history and bank statements to assess this application."
+    - purpose: offers
+      required: false
+      default: false
+      text: "Send me offers for future loans."
+
+collections:
+  handoff_dpd: 60
+  agency: recoverline
