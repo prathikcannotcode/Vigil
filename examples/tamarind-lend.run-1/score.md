@@ -1,6 +1,6 @@
 # Score: blind audit of tamarind-lend
 
-Assessment `2026-11-11-tamarind-lend-full`, 23 findings and 6 sector entries. Scored on 11 November 2026 against `examples/tamarind-lend.expected.json` and the run sheet on branch `claude/epic-wiles-e7f118`. The key's sha256 is `81ff4d9384b738f4e652fbd5a6c2b2d696b16acd5a84bc63d594c8fd5e395e1b`.
+Assessment `2026-11-11-tamarind-lend-full`, 23 findings and 6 sector entries. Scored on 11 November 2026 against `examples/tamarind-lend.expected.json` and the run sheet on branch `claude/epic-wiles-e7f118`. The key's sha256 is `81ff4d9384b738f4e652fbd5a6c2b2d696b16acd5a84bc63d594c8fd5e395e1b`. After this score, a later commit made the key changes proposed under Should-not-flag and added the run's real gaps to `known_gaps` (see "Key changes" in the run sheet); the app is unchanged. These figures use the earlier key.
 
 The scorer did not write the fixture or the report, and opened the key only for scoring. `report.json` has the same sha256 before and after scoring: `cbd59050e1414976235534aa444dea7298c41229cc4af5d756b4f25e0ad96543`. `summary.md` is `154b74bead5881efafa696517852f11ea7f2bfc9c9dd0bed015ca279f60889d9`.
 

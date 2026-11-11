@@ -6,7 +6,7 @@ Four of the planted items are sector-only duties with no DPDP or GDPR clause beh
 
 ## Audit session: cold, never opens the key
 
-Export a committed revision, so uncommitted skill text can't help the audit. From the repo root, with `<commit>` set to the revision under test:
+Export a committed revision, so uncommitted skill text can't help the audit. Commit a fixture under a subject that says nothing about its planted issues: an audit session started inside a checkout sees the recent commit subjects. From the repo root, with `<commit>` set to the revision under test:
 
 ```bash
 BLIND="$HOME/vigil-blind-tamarind"
@@ -44,4 +44,4 @@ Tuning skills on a scored run ends this fixture's blindness. Say so in any later
 
 ## Key changes
 
-None yet.
+- **11 November 2026.** Changed after the first scored run (`examples/tamarind-lend.run-1`, scored against the key at `d335bd1`). Three should-not-flag notes were too broad: the runbook note covered who receives the breach notice, the erasure note excused everything while a loan is open, and the policy note said every data item was itemised, though the analytics SDK's screen events are not. Those notes are narrowed. P7 now names Verilane, which the app calls straight from the phone. `known_gaps` records eight real gaps the run found. The key's wording of s.2(f), s.12(3) and s.16 is now checked against the Gazette. The app files are unchanged, and that score stands against the original key.
