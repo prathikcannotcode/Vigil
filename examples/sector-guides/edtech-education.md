@@ -1,5 +1,7 @@
 # Sector Guide: Edtech and Education
 
+> Background for an audit. Sector counsel has not reviewed this guide, and nothing in Vigil validates the sector instruments it names. A finding cites the DPDP or GDPR clause that carries the duty and names the sector rule in `cross_reference`. A duty with no such clause goes in the assessment summary.
+
 ## Applicable frameworks
 
 | Framework | Why it applies |
