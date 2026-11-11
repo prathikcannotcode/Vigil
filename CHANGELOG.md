@@ -1,17 +1,23 @@
 # Changelog
 
-## Unreleased
-
-Changes from a review of commit 731a3f9 that used synthetic data only.
+## 0.4.0 (11 November 2026)
 
 ### Guardrails
+Most of these come from a review of commit 731a3f9 that used synthetic data only.
+- The personal-data filter catches +91 mobiles split 5+5, such as `+91 98765 43210`, and PAN in lower case. Both passed before.
 - The write-guard blocks a hook event it cannot read: invalid JSON, no `tool_name` or `tool_input`, or a file tool with no path. It allowed all of these before.
 - NotebookEdit goes through the write-guard. It could write a notebook anywhere before.
 - Every reference in a finding's `clause` must name a DPDP section (1-44) or rule (1-23), or a GDPR article (1-99), in the finding's own framework. "Section 999 of the Imaginary Act" passed before. Sub-clauses and `cross_reference` are still unchecked.
 - The post-write validator reports a hook event it cannot read instead of skipping it.
 - The schema-validation test runs on a copy of the tracked demo, so a local audit can't turn `npm test` red.
 
+### Accuracy
+- Second blind, separately scored run: `examples/tamarind-lend`, a synthetic fintech app with sector-rule gaps, scored in `examples/tamarind-lend.run-1`. 13 of 13 planted issues found, and 1 of 4 sector-only duties filed as a DPDP finding. A subagent of the session that built the app ran the audit, so it is weaker evidence than kadamba-fit.
+- `/dpdp-catalog` gains detail on CERT-In, the RBI Digital Lending Directions and a row for the RBI KYC Master Direction, checked against cert-in.org.in and rbi.org.in on 11 November 2026.
+
 ### Docs
+- The README's accuracy table covers both blind runs, Quick start names Claude Code 2.1.295 as the minimum, and the plugin section says which skills need a Vigil workspace.
+- `SECURITY.md` says agents can edit the skills, `AGENTS.md`, `CLAUDE.md` and `.github/`.
 - `SECURITY.md` lists what the guards do not cover: shell and MCP writes, identifiers other than Aadhaar, PAN and +91 mobiles, what a clause means or whether it applies, and sector rules.
 - A sector-only duty, such as CERT-In's 6-hour report, goes in the assessment summary instead of a DPDP finding standing in for it. `AGENTS.md`, `/audit` and the three sector guides say so, and the guides say sector counsel has not reviewed them.
 

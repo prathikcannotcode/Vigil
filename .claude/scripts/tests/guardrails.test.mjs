@@ -184,6 +184,10 @@ test('write-guard keeps identifiers out of company and assessment data', () => {
   assert.equal(guard(report, 'Aadhaar 999971658847 in logs'), 2);
   assert.equal(guard(report, 'PAN ABCPE1234F in logs'), 2);
   assert.equal(guard(report, 'mobile +91 9000000000 in logs'), 2);
+  assert.equal(guard(report, 'mobile +91 90000 00000 in logs'), 2);
+  assert.equal(guard(report, 'mobile +91-90000-00000 in logs'), 2);
+  assert.equal(guard(report, 'pan abcpe1234f in logs'), 2);
+  assert.equal(guard(report, 'Mumbai office +91 22 2345 6789'), 0, 'a landline is not a mobile number');
   assert.equal(guard(report, 'Exposure Rs 250000000000, stored in the aadhaar_number column'), 0, 'an amount that fails the check digit is not an Aadhaar number');
   assert.equal(guard('docs/guide.md', 'PAN format example ABCPE1234F'), 0, 'documentation is out of scope');
   rmSync(dir, { recursive: true });

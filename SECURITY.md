@@ -30,13 +30,15 @@ Claude Code's permission system is what stands in front of the shell. `.claude/s
 
 `npm run validate -- --strict` in CI re-checks schemas and clause numbers however a file was written. It cannot tell that an old log line changed, so read log diffs in review.
 
+The layout also lets agents edit the skills, `AGENTS.md`, `CLAUDE.md` and everything under `.github/`, CI workflow included. Read diffs to those as closely as code.
+
 ### Hook input
 
 The guard blocks an event it cannot parse, one with no `tool_name` or `tool_input`, and a file tool with no path. An event from a tool that writes no file, such as TodoWrite caught by a loose matcher, passes. The post-write validator reports an event it cannot parse instead of skipping it.
 
 ### Personal data
 
-The guard blocks three formats in `company-profile/` and `assessments/`: Aadhaar numbers that pass the Verhoeff check, PAN, and +91 mobile numbers. Everything else gets through, including email addresses, dates of birth, card and bank account numbers, ABHA numbers and medical text. Some of those look exactly like data a profile or report is meant to hold, such as a DPO's email or a due date. Card and ABHA numbers are simply not covered yet. Treat the filter as a tripwire for the commonest Indian identifiers. It is not data-loss prevention.
+The guard blocks three formats in `company-profile/` and `assessments/`: Aadhaar numbers that pass the Verhoeff check, PAN in either case, and +91 mobile numbers written whole or split 5+5 (`+91 98765 43210`). A number with no `+91`, or split another way, passes. Everything else gets through, including email addresses, dates of birth, card and bank account numbers, ABHA numbers and medical text. Some of those look exactly like data a profile or report is meant to hold, such as a DPO's email or a due date. Card and ABHA numbers are simply not covered yet. Treat the filter as a tripwire for the commonest Indian identifiers. It is not data-loss prevention.
 
 It also has no say over what the model reads. Files Claude Code opens go to your model provider.
 
@@ -46,7 +48,7 @@ The validator checks that each reference in a finding's `clause` names a section
 
 ### Sector rules
 
-The finding schema knows three frameworks: DPDP, GDPR and UK GDPR. CERT-In, RBI, SEBI, IRDAI, health and education rules appear only as text, in `cross_reference`, the [sector guides](examples/sector-guides) and skill prose. Nothing validates them, sector counsel has not reviewed the guides, and no test measures whether an audit finds sector-specific gaps. A sector duty with no DPDP or GDPR clause behind it goes in the assessment summary, not `report.json`.
+The finding schema knows three frameworks: DPDP, GDPR and UK GDPR. CERT-In, RBI, SEBI, IRDAI, health and education rules appear only as text, in `cross_reference`, the [sector guides](examples/sector-guides) and skill prose. Nothing validates them, and sector counsel has not reviewed the guides. One fintech run, [tamarind-lend](examples/tamarind-lend.run-1/score.md), has measured sector detection: 3 of 4 sector-only duties landed in the right place. Healthtech and edtech have no run. A sector duty with no DPDP or GDPR clause behind it goes in the assessment summary, not `report.json`.
 
 ### Platform
 

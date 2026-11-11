@@ -51,16 +51,19 @@ To watch a real run, audit [`examples/acme-demo`](examples/acme-demo), a small s
 
 ## How accurate is it?
 
-One blind run so far, on [`examples/kadamba-fit`](examples/kadamba-fit): a 55-file synthetic fitness app whose code states none of its gaps. One session ran `/audit` without seeing the answer list, and a separate session scored it. The [score](examples/kadamba-fit.run-1/score.md):
+Two blind runs so far, each on a synthetic app whose code states none of its gaps. The auditor never saw the answer list, and a separate session that did not write the report scored it.
 
-| Measure | Result |
-|---|---|
-| Planted issues found | 16 of 16 |
-| Citation anchors cited exactly | 45 of 48 |
-| Should-not-flag items flagged anyway | 3 of 13; two were mistakes in the answer list, since corrected |
-| Fixture values copied into any output | 0 |
+| Measure | [kadamba-fit](examples/kadamba-fit.run-1/score.md), fitness app | [tamarind-lend](examples/tamarind-lend.run-1/score.md), RBI-registered lender |
+|---|---|---|
+| Planted issues found | 16 of 16 | 13 of 13 |
+| Citation anchors exact or more specific | 45 of 48 | 17 of 17 |
+| Should-not-flag items flagged anyway | 3 of 13; two were mistakes in the answer list, since corrected | 5 of 12; three arguably mistakes in the answer list |
+| Sector-only duties kept out of DPDP findings | Not measured | 3 of 4 |
+| Fixture values copied into any output | 0 | 0 |
 
-AI can make mistakes. Have a licensed attorney check every finding before you rely on it. The answer list is now public, so a fair re-run copies the app out of the repo and never opens [`examples/kadamba-fit.expected.json`](examples/kadamba-fit.expected.json) or the [run sheet](examples/kadamba-fit.run-sheet.md).
+tamarind-lend is the weaker run. A subagent of the session that built the app did the audit, and a commit subject in its context said sector-rule gaps were planted, so read its sector numbers as an upper bound.
+
+AI can make mistakes. Have a licensed attorney check every finding before you rely on it. Both answer lists are public now, so a fair re-run copies the app out of the repo and never opens its `.expected.json` or run sheet.
 
 ## Why Vigil
 
@@ -75,7 +78,7 @@ AI can make mistakes. Have a licensed attorney check every finding before you re
 
 ## Quick start
 
-You need [Node.js 22+](https://nodejs.org) and [Claude Code](https://claude.com/claude-code). There is nothing to `npm install`. On Windows, install [Git for Windows](https://git-scm.com/download/win) too: the hooks run in Git Bash, and without it every write is blocked.
+You need [Node.js 22+](https://nodejs.org) and [Claude Code](https://claude.com/claude-code) 2.1.295 or newer; older versions let a write through when the guard fails to start. There is nothing to `npm install`. On Windows, install [Git for Windows](https://git-scm.com/download/win) too: the hooks run in Git Bash, and without it every write is blocked.
 
 1. **Clone and check the workspace.**
    ```bash
@@ -111,7 +114,7 @@ claude plugin marketplace add prathikcannotcode/Vigil
 claude plugin install vigil@prathikcannotcode
 ```
 
-The plugin carries the 20 skills, namespaced as `/vigil:audit`, `/vigil:dpdp-consent` and so on, and they work in any project. It carries no hooks. The write guard, schema validation and the SARIF, OSCAL and OCSF exporters run only inside a Vigil workspace, so clone the repo when you need them.
+The plugin carries the 20 skills, namespaced as `/vigil:audit`, `/vigil:dpdp-consent` and so on. Questions and lookups, such as `/vigil:gdpr-qa` and `/vigil:dpdp-catalog`, work in any project. The skills that save files expect a Vigil workspace: `/vigil:audit` and `/vigil:onboard` write `assessments/` and `company-profile/` into whatever project is open, with no schemas there to check them, and `/vigil:export` calls npm scripts only the workspace has. The plugin carries no hooks, so nothing guards those writes. To audit, clone the repo.
 
 ## Skills
 
@@ -245,7 +248,7 @@ On a fresh clone, run `claude` once interactively and accept the trust dialog fi
 
 ## Regulatory coverage
 
-Last verified **2 November 2026**. Dates and clauses trace to the Gazette of India, EUR-Lex and legislation.gov.uk; see [`/dpdp-catalog`](.claude/skills/dpdp-catalog/SKILL.md) and [`/gdpr-catalog`](.claude/skills/gdpr-catalog/SKILL.md).
+Last verified **2 November 2026**, and the CERT-In, RBI Digital Lending and KYC rows of `/dpdp-catalog` on 11 November 2026. Dates and clauses trace to the Gazette of India, EUR-Lex and legislation.gov.uk; see [`/dpdp-catalog`](.claude/skills/dpdp-catalog/SKILL.md) and [`/gdpr-catalog`](.claude/skills/gdpr-catalog/SKILL.md).
 
 | Framework | What Vigil covers |
 |---|---|
@@ -253,9 +256,9 @@ Last verified **2 November 2026**. Dates and clauses trace to the Gazette of Ind
 | DPDP Rules 2025 | All 23 rules, with their phased commencement dates (13 Nov 2025, 13 Nov 2026, 13 May 2027) |
 | EU GDPR | Principles, lawful bases, rights, controller and processor duties, breaches, DPIAs, transfers, Art. 83 penalties, recent CJEU and EDPB developments |
 | UK GDPR + DUAA 2025 | Recognised legitimate interests, Art. 22A-22D, the transfer "data protection test", complaints handling, PECR changes |
-| Indian sector rules | CERT-In Directions 2022, RBI Cybersecurity Directions 2026, SEBI CSCRF, IRDAI guidelines, CCPA Dark Patterns Guidelines 2023, as context only. They appear in `cross_reference` and the sector guides, and nothing validates them. |
+| Indian sector rules | CERT-In Directions 2022, RBI Cybersecurity Directions 2026, RBI Digital Lending Directions 2025, the RBI KYC Master Direction, SEBI CSCRF, IRDAI guidelines, CCPA Dark Patterns Guidelines 2023, as context only. They appear in `cross_reference` and the sector guides, and nothing validates them. |
 
-Plus 7 consent notice templates (including Hindi) in [`examples/consent-notices`](examples/consent-notices) and sector guides for [fintech](examples/sector-guides/fintech-banking.md), [healthtech](examples/sector-guides/healthtech-healthcare.md) and [edtech](examples/sector-guides/edtech-education.md). Sector counsel has not reviewed the guides, and no test yet measures how well an audit finds sector-specific gaps.
+Plus 7 consent notice templates (including Hindi) in [`examples/consent-notices`](examples/consent-notices) and sector guides for [fintech](examples/sector-guides/fintech-banking.md), [healthtech](examples/sector-guides/healthtech-healthcare.md) and [edtech](examples/sector-guides/edtech-education.md). Sector counsel has not reviewed the guides. Sector detection has been measured once, on the fintech run above; healthtech and edtech have no run yet.
 
 ## What's in the repo
 
